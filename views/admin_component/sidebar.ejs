@@ -1,0 +1,48 @@
+  <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color: #1aa4b800;background-image: linear-gradient(141deg, #ffffffd1 0%, #fffffffa 75%) !important;font-size: 13px;font-weight: bold;">
+       <a href="index3.html" class="brand-link logo-switch elevation-3" style="border-bottom: 1px solid #e3e3e3;background-color: #ffffff78;">
+            <img src="/static/img/logo.png" alt="Outlet Pulsa" class="brand-image-xl logo-xs" style="opacity: .8;background-color: white;">
+            <img src="/static/img/logo-long.png" alt="Outlet Pulsa" class="brand-image-xs logo-xl" style="opacity: .8;background-color: white;">
+       </a>
+
+       <!-- <a href="/docs/3.0/index.html" class="brand-link logo-switch">
+        <img src="/docs/3.0/assets/img/logo-xs.png" alt="AdminLTE Docs Logo Small" class="brand-image-xl logo-xs">
+        <img src="/docs/3.0/assets/img/logo-xl.png" alt="AdminLTE Docs Logo Large" class="brand-image-xs logo-xl" style="left: 12px">
+        </a> -->
+       <div class="sidebar px-0">
+
+            <nav class="mt-2 px-2">
+                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="
+                 background-color: #ffffffc7;
+             ">
+                      <% for( let index = 0; index < Object.keys(list).length; index++ ) { %>
+                        <% if ( Object.keys(list[index].submenu).length  > 0 ) { %>
+                                <li class="nav-item has-treeview">
+                                    <a href="#" class="nav-link pl-3 <%= list[index].path %>">
+                                        <i class="nav-icon <%=  list[index].icon %>"></i>
+                                        <p><%= list[index].name %><i class="fas fa-angle-left right"></i></p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        <% for( let index2 = 0; index2 < Object.keys(list[index].submenu).length  ; index2++ ) { %>
+                                            <li class="nav-item">
+                                                <a class="nav-link <%= list[index].submenu[index2].path %>" onClick="menu('<%= list[index].icon %>' , '<%= list[index].submenu[index2].path %>')">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p><%= list[index].submenu[index2].name %></p>
+                                                </a>
+                                            </li>
+                                        <% } %>
+                                    </ul>
+                                </li>
+                        <% } else { %>
+                                <li class="nav-item">
+                                    <a class="nav-link pl-3 <%= list[index].path %>" onClick="menu('<%= list[index].icon %>' , '<%= list[index].path %>')">
+                                        <i class="nav-icon <%=  list[index].icon %>"></i>
+                                        <p><%= list[index].name %></p>
+                                    </a>
+                                </li>
+
+                        <% } %>
+                      <% } %>
+                 </ul>
+            </nav>
+       </div>
+  </aside>

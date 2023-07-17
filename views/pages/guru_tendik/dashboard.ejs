@@ -1,0 +1,392 @@
+<%- include('../../admin_component/header') %>
+<body class="hold-transition login-page" style="background-color: white;">
+    <div id="loader"></div>
+    <div class="login-box">
+         <div class="card" style="box-shadow: 0 0 1px rgb(255 255 255 / 13%), 0 1px 3px rgb(255 255 255 / 20%) !important;">
+              <div class="row p-4">
+                <div class="col-2">
+                    <img src="/static/img/logo.png" alt="Outlet Pulsa" class="brand-image img-circle elevation-3 mx-auto" style="opacity: .8;width: 40px;height: 40px;max-height: 70px;">
+                </div>
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-12">
+                            <span style="font-size: 15px;font-weight: bold;color: #454545;" id="fullname"></span>
+                        </div>
+                        <div class="col-12">
+                            <span style="font-size: 12px;font-weight: bold;color: #454545;" id="nip"></span>
+                        </div>    
+                    </div>
+                </div>
+                <div class="col-4 text-right">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 40px;">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="transform: translate3d(-68px, 39px, 0px)!important;">
+                            <a class="dropdown-item" onClick="goToMenu('riwayatAbsensi')" style="font-size: 14px;font-weight: bold;color: #454545;"><i class="fa fa-bars"></i> Riwayat Absensi</a>
+                            <a class="dropdown-item" onClick="goToMenu('logout')"  style="font-size: 14px;font-weight: bold;color: #454545;"><i class="fa fa-bars"></i> Logout</a>
+                        </div>
+                      </div>
+                </div>
+                <div class="col-12 text-center mt-5">
+                    <span style="font-size: 20px;font-weight: bold;color: #454545;" class="digital-clock"></span>
+                </div>
+                <div class="col-12 text-center">
+                    <span style="font-size: 17px;font-weight: bold;color: #454545;" id="tanggal"></span>
+                </div>
+                <div class="col-12 text-center mt-5" id="statusAbsensi">
+                </div>
+                <div class="col-12 text-center mt-3">
+                    <span style="font-size: 12px;font-weight: bold;color: #454545;" id="status_posisi"></span>
+                </div>
+                <div class="col-12 text-center mt-3">
+                    <span style="font-size: 12px;font-weight: bold;color: #454545;">Silahkah tekan tombol diatas<br>untuk melakukan absensi</span>
+                </div>
+                <div class="col-4 text-center mt-5">
+                    <div class="row py-4">   
+                        <div class="col-12">
+                            <img src="/static/img/asset/clock.png" alt="Click" class="brand-image mx-auto" style="opacity: .8;width: 30px;height: 30px;max-height: 70px;">
+                        </div>
+                        <div class="col-12 mt-2">
+                            <span style="font-size: 12px;font-weight: bold;color: #454545;" id="masuk">00:00</span>
+                        </div>
+                        <div class="col-12">
+                            <span style="font-size: 12px;font-weight: bold;color: #454545;">Waktu Masuk</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 text-center mt-5">
+                    <div class="row py-4">   
+                        <div class="col-12">
+                            <img src="/static/img/asset/clock.png" alt="Click" class="brand-image mx-auto" style="opacity: .8;width: 30px;height: 30px;max-height: 70px;">
+                        </div>
+                        <div class="col-12 mt-2">
+                            <span style="font-size: 12px;font-weight: bold;color: #454545;" id="keluar">00:00</span>
+                        </div>
+                        <div class="col-12">
+                            <span style="font-size: 12px;font-weight: bold;color: #454545;">Waktu Pulang</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 text-center mt-5">
+                    <div class="row py-4">   
+                        <div class="col-12">
+                            <img src="/static/img/asset/fullclock.png" alt="Click" class="brand-image mx-auto" style="opacity: .8;width: 30px;height: 30px;max-height: 70px;">
+                        </div>
+                        <div class="col-12 mt-2">
+                            <span style="font-size: 12px;font-weight: bold;color: #454545;" id="total">00hr:00min</span>
+                        </div>
+                        <div class="col-12">
+                            <span style="font-size: 12px;font-weight: bold;color: #454545;">Waktu Kerja</span>
+                        </div>
+                    </div>
+                </div>
+              </div>
+         </div>
+    </div>
+    <script>
+        var kode = '<%= kode %>';
+        var letitude = '<%= letitude %>';
+        var longitude = '<%= longitude %>';
+        var jarak_min = '<%= jarak_min %>';
+    </script>
+    <%- include('../../admin_component/footer') %>
+   
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            clockUpdate();
+            setInterval(clockUpdate, 1000);
+            setInterval(function() { 
+
+
+                positioning(letitude, longitude);
+                // console.log(letitude); 
+                // console.log(longitude);
+            
+            }, 1000);
+                
+
+            getDataDashboard();
+
+            function clockUpdate() {
+                var date = new Date();
+                function addZero(x) {
+                    if (x < 10) {
+                    return x = '0' + x;
+                    } else {
+                    return x;
+                    }
+                }
+
+                function twelveHour(x) {
+                    if (x > 12) {
+                    return x = x - 12;
+                    } else if (x == 0) {
+                    return x = 12;
+                    } else {
+                    return x;
+                    }
+                }
+                var h = addZero(twelveHour(date.getHours()));
+                var m = addZero(date.getMinutes());
+                var s = addZero(date.getSeconds());
+                $('.digital-clock').text(h + ':' + m + ':' + s)
+            }
+
+            function positioning(letitude, longitude){
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        location(position);
+                    });
+                }
+            }
+
+            function location(position){
+                var latitude2 = position.coords.latitude;
+                var longitude2 = position.coords.longitude;
+                var jarak = getDistanceBetweenPoints(letitude,longitude,latitude2,longitude2,'kilometers') * 1000;
+
+                // var jarak = distance(letitude,longitude,latitude2,longitude2, "K") * 1000 ;
+                if( jarak > jarak_min ){
+                    $('#status_posisi').html(`<b style="color:red">Anda berada diluar jarak absensi</b>`);
+
+                }else{
+                    $('#status_posisi').html(`<b style="color:green">Anda berada didalam jarak absensi</b>`);
+                }
+            }
+
+            function distance(lat1, lon1, lat2, lon2, unit) {
+                if ((lat1 == lat2) && (lon1 == lon2)) {
+                    return 0;
+                }
+                else {
+                    var radlat1 = Math.PI * lat1/180;
+                    var radlat2 = Math.PI * lat2/180;
+                    var theta = lon1-lon2;
+                    var radtheta = Math.PI * theta/180;
+                    var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+                    if (dist > 1) {
+                        dist = 1;
+                    }
+                    dist = Math.acos(dist);
+                    dist = dist * 180/Math.PI;
+                    dist = dist * 60 * 1.1515;
+                    if (unit=="K") { dist = dist * 1.609344 }
+                    if (unit=="N") { dist = dist * 0.8684 }
+                    return dist;
+                }
+            }
+
+            // function calcCrow(lat1, lon1, lat2, lon2) 
+            // {
+            // var R = 6371; // km
+            // var dLat = toRad(lat2-lat1);
+            // var dLon = toRad(lon2-lon1);
+            // var lat1 = toRad(lat1);
+            // var lat2 = toRad(lat2);
+
+            // var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            //     Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+            // var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+            // var d = R * c;
+            // return d;
+            // }
+            // // Converts numeric degrees to radians
+            // function toRad(Value) 
+            // {
+            //     return Value * Math.PI / 180;
+            // }
+
+            function getDistanceBetweenPoints(
+                latitude1,
+                longitude1,
+                latitude2,
+                longitude2,
+                unit = "miles"
+            ) {
+                let theta = longitude1 - longitude2;
+                let distance =
+                    60 *
+                    1.1515 *
+                    (180 / Math.PI) *
+                    Math.acos(
+                        Math.sin(latitude1 * (Math.PI / 180)) *
+                            Math.sin(latitude2 * (Math.PI / 180)) +
+                            Math.cos(latitude1 * (Math.PI / 180)) *
+                                Math.cos(latitude2 * (Math.PI / 180)) *
+                                Math.cos(theta * (Math.PI / 180))
+                    );
+                if (unit == "miles") {
+                    return Math.round(distance, 2);
+                } else if (unit == "kilometers") {
+                    console.log("distance");
+                    console.log(distance);
+                    console.log(distance * 1.609344);
+                    console.log("distance");
+                    //return Math.round(distance * 1.609344, 2);
+                    return distance * 1.609344;
+                    //return distance;
+                } else if (unit == "meters") {
+                    return Math.round(distance * 1.609344 * 1000);
+                }
+            }
+
+            function getDataDashboard(){
+                ajax_default({
+                    url: 'guru_tendik/' + kode + '/dataDashboard',
+                    method: "get",
+                }, function(e) {
+                    $("#loader").hide();
+                    $('#fullname').html(e.fullname);
+                    $('#nip').html(e.nip);
+                    $('#tanggal').html(e.tanggal);
+                    $('#masuk').html(e.masuk =='' ? '00:00' : e.masuk);
+                    $('#keluar').html(e.keluar =='' ? '00:00' : e.keluar);
+                    $('#total').html(e.total);
+                    $('#statusAbsensi').html(FNbtnStatusAbsensi(e.statusAbsensi));
+                }, function(e,msg) {
+                    frown_alert(errMsg);
+                        setTimeout(function() {
+                                window.location.href = base_url + "/"
+                            }, 1000);
+                });
+            }
+
+            function FNbtnStatusAbsensi(status){
+                var html = '';
+                if( status == 'active' ) {
+                    html = `<a class="btn rounded-circle" onClick="absensi()" style="height:200px;width: 200px;background-color: black !important;background-image: linear-gradient(to bottom right, #3E81DF, #9483E1);">
+                                    <div class="row py-4">   
+                                        <div class="col-12">
+                                            <img src="/static/img/asset/click.png" alt="Click" class="brand-image mx-auto" style="opacity: .8;width: 70px;height: 70px;max-height: 70px;">
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <span style="font-size: 17px;font-weight: bold;color: white;">Click Disini</span>
+                                        </div>
+                                    </div>
+                                </a>`;
+                } else if( status == 'outtime' ) {
+                    html += `<a class="btn rounded-circle" onClick="frown_alert('Absensi tidak dapat dilakukan diluar waktu.')" style="height:200px;width: 200px;background-color: black !important;background-image: linear-gradient(to bottom right, rgb(222 63 63), #9483E1);">
+                                    <div class="row py-4">   
+                                        <div class="col-12">
+                                            <img src="/static/img/asset/outtime.png" alt="Click" class="brand-image mx-auto" style="opacity: .8;width: 70px;height: 70px;max-height: 70px;">
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <span style="font-size: 17px;font-weight: bold;color: white;">Diluar Waktu</span>
+                                        </div>
+                                    </div>
+                                </a>`;
+                } else if( status == 'weekend' ) {
+                    html = `<a class="btn rounded-circle" onClick="frown_alert('Anda tidak dapat melakukan absensi selama Akhir Pekan.')" style="height:200px;width: 200px;background-color: black !important;background-image: linear-gradient(to bottom right, rgb(222 63 63), #9483E1);">
+                                    <div class="row py-4">   
+                                        <div class="col-12">
+                                            <img src="/static/img/asset/weekend.png" alt="Click" class="brand-image mx-auto" style="opacity: .8;width: 70px;height: 70px;max-height: 70px;">
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <span style="font-size: 17px;font-weight: bold;color: white;">Akhir Pekan</span>
+                                        </div>
+                                    </div>
+                                </a>`;
+                } else if( status == 'holiday' ) {
+                    html +=`<a class="btn rounded-circle" onClick="frown_alert('Anda tidak dapat melakukan absensi selama Hari Libur.')" style="height:200px;width: 200px;background-color: black !important;background-image: linear-gradient(to bottom right, rgb(222 63 63), #9483E1);">
+                                <div class="row py-4">   
+                                    <div class="col-12">
+                                        <img src="/static/img/asset/holiday.png" alt="Click" class="brand-image mx-auto" style="opacity: .8;width: 70px;height: 70px;max-height: 70px;">
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <span style="font-size: 17px;font-weight: bold;color: white;">Hari Libur</span>
+                                    </div>
+                                </div>
+                            </a>`;
+                } else if( status == 'dl' ) {
+                    html += `<a class="btn rounded-circle" onClick="frown_alert('Anda tidak dapat melakukan absensi selama Dinas Luar')" style="height:200px;width: 200px;background-color: black !important;background-image: linear-gradient(to bottom right, rgb(222 63 63), #9483E1);">
+                                    <div class="row py-4">   
+                                        <div class="col-12">
+                                            <img src="/static/img/asset/tra2.png" alt="Click" class="brand-image mx-auto" style="opacity: .8;width: 70px;height: 70px;max-height: 70px;">
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <span style="font-size: 17px;font-weight: bold;color: white;">Izin</span>
+                                        </div>
+                                    </div>
+                                </a>`;
+                }  else if( status == 'lock' ) {
+                    html += `<a class="btn rounded-circle" onClick="frown_alert('Anda sudah melakukan absensi.')" style="height:200px;width: 200px;background-color: black !important;background-image: linear-gradient(to bottom right, rgb(222 63 63), #9483E1);">
+                                    <div class="row py-4">   
+                                        <div class="col-12">
+                                            <img src="/static/img/asset/padlock.png" alt="Click" class="brand-image mx-auto" style="opacity: .8;width: 70px;height: 70px;max-height: 70px;">
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <span style="font-size: 17px;font-weight: bold;color: white;">Lock</span>
+                                        </div>
+                                    </div>
+                                </a>`;
+                }
+                return html;
+            }
+        });
+
+        function locationSuccess(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+
+            ajax_default({
+                url: 'guru_tendik/' + kode + '/absensi',
+                method: "post",
+                form: false,
+                data: {
+                    latitude: latitude, 
+                    longitude: longitude
+                }
+            }, function(e) {
+                smile_alert(e.msg);
+                setTimeout(function() {
+                        window.location.href = base_url + "/guru_tendik/" + kode
+                    }, 2000);
+            
+            }, function(e, msg) {
+                frown_alert(msg);
+            });
+
+
+            // console.log("latitude : " + latitude);
+            // console.log("longitude : " + longitude);
+
+            // return { latitude: latitude, longitude:longitude} ;
+            //$("#locationData").html("Latitude: " + latitude + "<br>Longitude: " + longitude);
+        }
+
+        function absensi(){
+            if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(locationSuccess);
+            } else {
+                frown_alert('Browser Anda tidak mendukung pengambilan data lokasi.');
+            }
+        }
+
+        function logout(){
+            ajax_default({
+                url: 'guru_tendik/' + kode + '/logout',
+                method: "get",
+            }, function(e) {
+                smile_alert(e.msg)
+                setTimeout(function() {
+                    window.location.href = base_url + "/"
+                }, 1000);
+            }, function(e, msg) {
+                frown_alert(msg);
+            });
+        }
+
+
+        //  $("#getLocation").click(function() {
+        //         if (navigator.geolocation) {
+        //             navigator.geolocation.getCurrentPosition(locationSuccess);
+        //         } else {
+        //             $("#locationData").html('Your browser does not support location data retrieval.');
+        //         }
+        //     });
+ 
+           
+    </script>
+</body>

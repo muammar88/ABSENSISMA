@@ -1,0 +1,95 @@
+<%- include('../../admin_component/header') %>
+<body class="hold-transition login-page" style="background-color: white;justify-content: flex-start;">
+    
+    <div class="login-box">
+         <div class="card" style="box-shadow: 0 0 1px rgb(255 255 255 / 13%), 0 1px 3px rgb(255 255 255 / 20%) !important;">
+              <div class="row p-4">
+                <div class="col-2">
+                    <a onClick="goToMenu('dashboard')"> <img src="/static/img/asset/left-arrow.png" alt="Outlet Pulsa" class="brand-image img-circle mx-auto" style="opacity: .8;width: 20px;height: 20px;max-height: 70px;"></a>
+                </div>
+                <div class="col-8 text-center">
+                    <span style="font-size: 15px;font-weight: bold;color: #454545;">Daftar Dinas Luar</span>
+                </div>
+                <div class="col-2 ext-right">
+                    <a onClick="addDinasLuar()"> <img src="/static/img/asset/add.png" alt="Outlet Pulsa" class="brand-image img-circle mx-auto" style="opacity: .8;width: 25px;height: 25px;max-height: 70px;"></a>
+                </div>
+                <div class="col-12 text-center">
+                    <div class="row mt-4">
+                        <table class="w-100">
+                            <thead>
+                                <tr class="border-bottom">
+                                    <th style="font-size: 10px;width: 25%;height: 30px;color: #454545;" class="text-center">MULAI DL</th>
+                                    <th style="font-size: 10px;width: 25%;height: 30px;color: #454545;" class="text-center">AKHIR DL</th>
+                                    <th style="font-size: 10px;width: 25%;height: 30px;color: #454545;" class="text-center">STATUS</th>
+                                    <th style="font-size: 10px;width: 25%;height: 30px;color: #454545;" class="text-center">SK</th>
+                                </tr>  
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-12 text-center mt-0">
+                    <div class="row mt-0">
+                        <table class="w-100">
+                            <tbody id="listDinasLuar">
+                   
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+              </div>
+         </div>
+    </div>
+    <script>var nip = '<%= nip %>'; </script>
+    <%- include('../../admin_component/footer') %>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            getDaftarDinasLuar(1, 20);
+        });
+
+        function getDaftarDinasLuar(perpage, perNumber){
+            ajax_default({
+                url: 'dosen/' + nip+ '/daftarDinasLuar/'+perpage+'/' + perNumber ,
+                method: "get",
+            }, function(e) {
+                var html = '';
+                var i =0;
+                console.log('e.data.length');
+                console.log(  );
+                console.log('e.data.length');
+
+                if( Object.keys(e.data).length > 0 ){
+                    for( x in e.data ){
+                        html += `<tr ${ i%2 == 0 ? 'style="background-color: #f0f0ff;"' : ""} >
+                                    <td style="width: 25%;" class="text-center tdTable">
+                                        <div class="row mx-0" style="height: 57px;width: auto;background-color: #d1d1d1;" >
+                                            <div class="col-12 date-agenda rounded pt-3 pb-0 px-0">
+                                                <span class="d-block date-item-agenda">${e.data[x].start_day}</span>
+                                                <span class="d-block date-month-agenda">${e.data[x].start_month}/${e.data[x].start_year}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="width: 25%;"  class="text-center tdTable">
+                                        <div class="row mx-0" style="height: 57px;width: auto;background-color: #d1d1d1;" >
+                                            <div class="col-12 date-agenda rounded pt-3 pb-0 px-0">
+                                                <span class="d-block date-item-agenda">${e.data[x].end_day}</span>
+                                                <span class="d-block date-month-agenda">${e.data[x].end_month}/${e.data[x].end_year}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="width: 25%;font-size:15px;"  class="text-center tdTable" >${e.data[x].status}</td>
+                                    <td style="width: 25%;"  class="text-center tdTable">${e.data[x].sk != '' ? '<img style="width: 20px;" src="/img/asset/contract.png">' : '-' }</td>
+                                </tr>`;
+                        i++;
+                    }
+                }else{
+                    html += `<tr>
+                                <td  class="text-center tdTable" colspan="4"><b>Daftar Pengajuan Dinas Luar Tidak Ditemukan</b></td>
+                            </tr>`;
+                }
+                
+                console.log(html);
+                $('#listDinasLuar').html(html);
+            });
+        }
+    </script>
+</body>

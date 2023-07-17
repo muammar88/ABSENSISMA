@@ -1,0 +1,51 @@
+
+<script src="/static/template/plugins/jquery/jquery.min.js"></script>
+<!-- bootstrap -->
+<script src="/static/template/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE -->
+<script src="/static/template/distr/js/adminlte.js"></script>
+<!-- OPTIONAL SCRIPTS -->
+<script src="/static/template/plugins/chart.js/Chart.min.js"></script>
+<!-- Dashboard 3 -->
+<script src="/static/template/distr/js/pages/dashboard3.js"></script>
+<!-- jquery confirm -->
+<script src="/static/template/plugins/jquery-confirm/jquery-confirm.min.js"></script> 
+<!-- My Frame -->
+<script src="/static/app/myframes/myframe.js"></script>
+<!-- Ckeditor -->
+<script src="/static/template/plugins/ckeditor/ckeditor.js"></script>
+<!-- Select2 -->
+<script src="/static/template/plugins/select2/js/select2.min.js"></script>
+<script>
+    
+    function goToMenu(menu){
+        if( menu == 'riwayatAbsensi') {
+            window.location.href = base_url + "/guru_tendik/"+kode+"/riwayatAbsensi";
+        } else if( menu == 'dashboard' ) {
+            window.location.href = base_url + "/guru_tendik/"+kode;
+        }else if( menu == 'logout' ) {
+            logout();
+        }
+    }
+
+    // function addDinasLuarToServer(e) {
+    //     e.preventDefault();
+    //     ajax_file({
+    //         url: 'dosen/'+nip+'/saveAddDinasLuar',
+    //         method: "post",
+    //         form: true,
+    //     }, function(e, xhr) {
+    //         smile_alert(e.error_msg);
+    //         goToMenu('daftarDinasLuar');
+    //     }, function(e, errMsg) {
+    //         frown_alert(errMsg);
+    //     });
+    // }
+
+    // function addDinasLuar(){
+    //     window.location.href = base_url + "/dosen/"+nip+"/addDinasLuar";
+    // }
+
+   
+</script>
+

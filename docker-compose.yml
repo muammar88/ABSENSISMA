@@ -1,0 +1,69 @@
+version: "3.8"
+
+services:
+
+    db:
+        image: mysql
+        container_name: db
+        environment:
+            MYSQL_ROOT_PASSWORD: admins
+            MYSQL_DATABASE: mbkm_db
+            MYSQL_USER: user
+            MYSQL_PASSWORD: password
+        networks:
+            - mysql-app   
+        ports:
+            - "3306:3306"
+        volumes:
+            - my-db:/var/lib/mysql
+
+
+    phpmyadmin:
+        image: phpmyadmin
+        container_name: pma
+        links:
+            - db
+        environment:
+            PMA_HOST: db
+            PMA_PORT: 3306
+            PMA_ARBITRARY: 1
+        restart: always
+        ports:
+        - 8081:80
+
+    mbkm:
+        container_name: mbkm
+        image: mbkm
+        build: .
+        ports: 
+            - 3001:3001
+        command: npm run dev  
+        depends_on:
+            - db
+        volumes:
+            - .:/app-mbkm
+            - node_modules_mbkm:/app-mbkm/node_modules  
+        networks:
+            - mysql-app  
+        environment:
+            - ACCESS_TOKEN_SECRET = 9813kbk31023khvviuytyuwqkiwvj9mnb757uytr34nm123o
+            - REFRESH_TOKEN_SECRET = y87238giehgaiuwgd82o123455gskiassmnxzxclaoihdsobk
+            - DB_USER = root
+            - DB_PASSWORD = password
+            - DB_HOST = mongo
+            - DB_PORT = 27000
+            - DB_NAME = outletpulsa
+        command : npm start    
+         
+
+networks:
+    mysql-app:
+        driver: bridge   
+
+volumes:
+    node_modules_mbkm:
+    my-db:
+  
+       
+ 
+     

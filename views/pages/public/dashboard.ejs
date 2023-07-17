@@ -1,0 +1,225 @@
+<%- include('../../admin_component/header') %>
+<body class="hold-transition login-page" style="background-color: white;">
+    
+    <div class="login-box">
+         <div class="card" style="box-shadow: 0 0 1px rgb(255 255 255 / 13%), 0 1px 3px rgb(255 255 255 / 20%) !important;">
+              <div class="row p-4">
+                <div class="col-2">
+                    <img src="/static/img/logo.png" alt="Outlet Pulsa" class="brand-image img-circle elevation-3 mx-auto" style="opacity: .8;width: 40px;height: 40px;max-height: 70px;">
+                </div>
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-12">
+                            <span style="font-size: 15px;font-weight: bold;color: #454545;"><%= fullname %></span>
+                        </div>
+                        <div class="col-12">
+                            <span style="font-size: 12px;font-weight: bold;color: #454545;"><%= nip %></span>
+                        </div>    
+                    </div>
+                </div>
+                <div class="col-4 text-right">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 40px;">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="transform: translate3d(-68px, 39px, 0px)!important;">
+                          <a class="dropdown-item" onClick="goToMenu('riwayatAbsensi')" style="font-size: 14px;font-weight: bold;color: #454545;"><i class="fa fa-bars"></i> Riwayat Absensi</a>
+                          <a class="dropdown-item" onClick="goToMenu('daftarDinasLuar')" href="#" style="font-size: 14px;font-weight: bold;color: #454545;"><i class="fa fa-bars"></i> Daftar Dinas Luar</a>
+                          <a class="dropdown-item" onClick="goToMenu('logout')"  style="font-size: 14px;font-weight: bold;color: #454545;"><i class="fa fa-bars"></i> Logout</a>
+                        </div>
+                      </div>
+                </div>
+
+                <div class="col-12 text-center mt-5">
+                    <span style="font-size: 20px;font-weight: bold;color: #454545;" class="digital-clock"></span>
+                </div>
+                <div class="col-12 text-center">
+                    <span style="font-size: 17px;font-weight: bold;color: #454545;"><%= tanggal %></span>
+                </div>
+
+                <div class="col-12 text-center mt-5">
+                    <%
+                        if( statusAbsensi == 'active' ) {
+                            %>
+                                <a class="btn rounded-circle" onClick="absensi()" style="height:200px;width: 200px;background-color: black !important;background-image: linear-gradient(to bottom right, #3E81DF, #9483E1);">
+                                    <div class="row py-4">   
+                                        <div class="col-12">
+                                            <img src="/static/img/asset/click.png" alt="Click" class="brand-image mx-auto" style="opacity: .8;width: 70px;height: 70px;max-height: 70px;">
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <span style="font-size: 17px;font-weight: bold;color: white;">Click Disini</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            <%
+                        } else if( statusAbsensi == 'outtime' ){
+                            %>
+                                <a class="btn rounded-circle" onClick="frown_alert('Absensi tidak dapat dilakukan diluar waktu.')" style="height:200px;width: 200px;background-color: black !important;background-image: linear-gradient(to bottom right, rgb(222 63 63), #9483E1);">
+                                    <div class="row py-4">   
+                                        <div class="col-12">
+                                            <img src="/static/img/asset/outtime.png" alt="Click" class="brand-image mx-auto" style="opacity: .8;width: 70px;height: 70px;max-height: 70px;">
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <span style="font-size: 17px;font-weight: bold;color: white;">Diluar Waktu</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            <%
+                        } else if( statusAbsensi == 'weekend' ){
+                            %>
+                                <a class="btn rounded-circle" onClick="frown_alert('Anda tidak dapat melakukan absensi selama Akhir Pekan.')" style="height:200px;width: 200px;background-color: black !important;background-image: linear-gradient(to bottom right, rgb(222 63 63), #9483E1);">
+                                    <div class="row py-4">   
+                                        <div class="col-12">
+                                            <img src="/static/img/asset/weekend.png" alt="Click" class="brand-image mx-auto" style="opacity: .8;width: 70px;height: 70px;max-height: 70px;">
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <span style="font-size: 17px;font-weight: bold;color: white;">Akhir Pekan</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            <%
+                        } else if( statusAbsensi == 'holiday' ){
+                            %>
+                                <a class="btn rounded-circle" onClick="frown_alert('Anda tidak dapat melakukan absensi selama Hari Libur.')" style="height:200px;width: 200px;background-color: black !important;background-image: linear-gradient(to bottom right, rgb(222 63 63), #9483E1);">
+                                    <div class="row py-4">   
+                                        <div class="col-12">
+                                            <img src="/static/img/asset/holiday.png" alt="Click" class="brand-image mx-auto" style="opacity: .8;width: 70px;height: 70px;max-height: 70px;">
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <span style="font-size: 17px;font-weight: bold;color: white;">Hari Libur</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            <%
+                        } else if( statusAbsensi == 'dl' ){
+                            %>
+                                <a class="btn rounded-circle" onClick="frown_alert('Anda tidak dapat melakukan absensi selama Dinas Luar')" style="height:200px;width: 200px;background-color: black !important;background-image: linear-gradient(to bottom right, rgb(222 63 63), #9483E1);">
+                                    <div class="row py-4">   
+                                        <div class="col-12">
+                                            <img src="/static/img/asset/tra2.png" alt="Click" class="brand-image mx-auto" style="opacity: .8;width: 70px;height: 70px;max-height: 70px;">
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <span style="font-size: 17px;font-weight: bold;color: white;">Dinas Luar</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            <%
+                        } else if( statusAbsensi == 'lock' ){
+                            %>
+                                <a class="btn rounded-circle" onClick="frown_alert('Anda sudah melakukan absensi.')" style="height:200px;width: 200px;background-color: black !important;background-image: linear-gradient(to bottom right, rgb(222 63 63), #9483E1);">
+                                    <div class="row py-4">   
+                                        <div class="col-12">
+                                            <img src="/static/img/asset/padlock.png" alt="Click" class="brand-image mx-auto" style="opacity: .8;width: 70px;height: 70px;max-height: 70px;">
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <span style="font-size: 17px;font-weight: bold;color: white;">Lock</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            <%
+                        }
+                    %>
+                </div>
+                <div class="col-12 text-center mt-5">
+                    <span style="font-size: 12px;font-weight: bold;color: #454545;">Silahkah tekan tombol diatas<br>untuk melakukan absensi</span>
+                </div>
+                <div class="col-4 text-center mt-5">
+                    <div class="row py-4">   
+                        <div class="col-12">
+                            <img src="/static/img/asset/clock.png" alt="Click" class="brand-image mx-auto" style="opacity: .8;width: 30px;height: 30px;max-height: 70px;">
+                        </div>
+                        <div class="col-12 mt-2">
+                            <span style="font-size: 12px;font-weight: bold;color: #454545;"><%= masuk != '' ? masuk : '00:00' %></span>
+                        </div>
+                        <div class="col-12">
+                            <span style="font-size: 12px;font-weight: bold;color: #454545;">Waktu Masuk</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 text-center mt-5">
+                    <div class="row py-4">   
+                        <div class="col-12">
+                            <img src="/static/img/asset/clock.png" alt="Click" class="brand-image mx-auto" style="opacity: .8;width: 30px;height: 30px;max-height: 70px;">
+                        </div>
+                        <div class="col-12 mt-2">
+                            <span style="font-size: 12px;font-weight: bold;color: #454545;"><%= keluar != '' ? keluar : '00:00' %></span>
+                        </div>
+                        <div class="col-12">
+                            <span style="font-size: 12px;font-weight: bold;color: #454545;">Waktu Pulang</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 text-center mt-5">
+                    <div class="row py-4">   
+                        <div class="col-12">
+                            <img src="/static/img/asset/fullclock.png" alt="Click" class="brand-image mx-auto" style="opacity: .8;width: 30px;height: 30px;max-height: 70px;">
+                        </div>
+                        <div class="col-12 mt-2">
+                            <span style="font-size: 12px;font-weight: bold;color: #454545;"><%= total %></span>
+                        </div>
+                        <div class="col-12">
+                            <span style="font-size: 12px;font-weight: bold;color: #454545;">Waktu Kerja</span>
+                        </div>
+                    </div>
+                </div>
+              </div>
+         </div>
+    </div>
+    <%- include('../../admin_component/footer') %>
+    <script type="text/javascript">
+
+
+        $(document).ready(function() {
+            clockUpdate();
+            setInterval(clockUpdate, 1000);
+
+
+
+            function clockUpdate() {
+                var date = new Date();
+                function addZero(x) {
+                    if (x < 10) {
+                    return x = '0' + x;
+                    } else {
+                    return x;
+                    }
+                }
+
+                function twelveHour(x) {
+                    if (x > 12) {
+                    return x = x - 12;
+                    } else if (x == 0) {
+                    return x = 12;
+                    } else {
+                    return x;
+                    }
+                }
+
+                var h = addZero(twelveHour(date.getHours()));
+                var m = addZero(date.getMinutes());
+                var s = addZero(date.getSeconds());
+
+                $('.digital-clock').text(h + ':' + m + ':' + s)
+            }
+        });
+
+        
+
+        
+        function sign_in(e) {
+              e.preventDefault();
+              ajax_default({
+                   url: 'public/auth',
+                   method: "post",
+                   form: true
+              }, function(e) {
+                   smile_alert('Login Berhasil Dilakukan');
+                   window.location.href = base_url + "/public/dosen";
+              });
+        }
+
+       
+
+         // currentTime();
+    </script>
+</body>

@@ -1,0 +1,85 @@
+<%- include('../component_main/header') %>
+
+<body>
+     
+     <%- include('../component_main/navbar') %>
+     <main class="container">
+          
+          <div class="row mb-3">
+               <div class="col-3 bg-white rounded-left col-md-2 col-lg-2 py-2 shadow-sm">
+                    <span><b>HEADLINE :</b></span>
+               </div>
+               <div class="col-9 col-md-10 col-lg-10 py-2 rounded-right shadow-sm" style="background-color: #333333;color: #cbdec9 !important;">
+                    <marquee direction="" onmouseover="this.stop();" onmouseout="this.start();" style="position: absolute;">
+                        <% for( let index = 0; index < Object.keys(headline).length; index++ ) { %>
+                            <a target="_blank" href="/?slug=<%= headline[index].slug %>"><%= headline[index].title %></a> <b><|></b> 
+                        <% } %>
+                    </marquee>
+               </div>
+          </div>
+          <div class="row g-5 mb-5">
+               <div class="col-md-8 bg-white shadow-sm  py-3">
+                    <h3 class="pb-4 mb-4 fst-italic border-bottom"><a class="style-1" target="_blank" href="/Berita"><b>Berita Terkini</b></a></h3>
+                    <div class="row">
+                         <% for( let index = 0; index < Object.keys(berita_terkini).length; index++ ) { %>
+                         <% if (index <= 1 ) { %>
+                         <div class="col-6">
+                              <article class="px-2 px-md-0">
+                                   <img class="d-block w-100 rounded" src="/photo/post/<%= berita_terkini[index].photo %> "  alt="<%= berita_terkini[index].title %> ">
+                                   <a target="_blank" href="/?slug=<%= berita_terkini[index].slug %> ">
+                                        <h6 class="title-artikel my-2"><b><%= berita_terkini[index].title %> </b></h6>
+                                   </a>
+                                   <span class="date_artikel"><%= berita_terkini[index].date_name %>, <%= berita_terkini[index].date_day %>  <%= berita_terkini[index].date_month %> <%= berita_terkini[index].date_year %></span>
+                                   <p class="description-artikel mt-2"><%- berita_terkini[index].description %> </p>
+                              </article>
+                         </div>
+                         <% } else { %>
+                         <div class="col-6">
+                              <article class="px-2 px-md-0">
+                                   <div class="row">
+                                        <div class="col-3">
+                                             <img class="d-block w-100 rounded" src="/photo/post/<%= berita_terkini[index].photo %> " alt="Gubernur Aceh Ajak ASN Sumbangkan Dana Bantu Palestina">
+                                        </div>
+                                        <div class="col-9">
+                                             <a target="_blank" href="/?slug=Gubernur-Aceh-Ajak-ASN-Sumbangkan-Dana-Bantu-Palestina">
+                                                  <h6 class="title-artikel mt-0 mb-1"><b>Gubernur Aceh Ajak ASN Sumbangkan Dana Bantu Palestina</b></h6>
+                                             </a>
+                                             <span class="date_artikel">Sun, 28 November 2021</span>
+                                             <p class="description-artikel mb-0 mt-1">Gubernur Aceh Nova Iriansyah, mengajak Aparatur Sipil Negara (ASN) dan Tenaga Kontrak di jajaran Pemerintahan Aceh menyumbang dana secara sukarela/sei. Lorem Ipsum is simply...</p>
+                                        </div>
+                                   </div>
+                                   <hr class="w-100 line-dashed-artikel">
+                              </article>
+                         </div>
+                         <% } %>
+                         <% } %>
+                    </div>
+                    <h3 class="pb-4 mb-4 fst-italic border-bottom mt-5"><a class="style-1" target="_blank" href="/Galeri"><b>Galeri</b></a></h3>
+                    <div class="row justify-content-center pb-5">
+                         <%- include('../component_main/galeri') %>
+                    </div>
+               </div>
+               <div class="col-md-4">
+                    <%- include('../component_main/rightside') %>
+               </div>
+          </div>
+     </main>
+     <%- include('../component_main/footer') %>
+     <script src="../assets/dist/js/particle.js"></script>
+     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</body>
+<script>
+     $(function() {
+          $('.wrapper').click(function() {
+               $('.wrapper').each(function() {
+                    $(this).css('z-index', 0);
+               });
+               $(this).css('z-index', 10);
+               $(this).toggleClass('open');
+          })
+     })
+</script>
+
+</html>

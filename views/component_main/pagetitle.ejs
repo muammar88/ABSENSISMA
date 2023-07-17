@@ -1,0 +1,26 @@
+
+<style>
+    .title-background {
+        background-image: url(/photo/background.png);
+        background-position: center;
+        background-repeat: no-repeat;
+        background-color: #ccccccd9;
+        background-size: cover;
+        background-attachment: fixed;
+    }
+</style>
+<div class="page-title-div mb-3 mb-md-5 title-background">
+    <div class="container">
+         <div class="row g-5">
+              <div class="col-lg-12">
+                   <h3 class="pb-4 mb-4 page-title">
+                    <% if (active == '' ) { %>
+                        <b>Detail Berita</b>
+                    <% } else { %>
+                        <b><%= active.toUpperCase() %> </b>
+                    <% } %>
+                   </h3>
+              </div>
+         </div>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+<div class="row p-0 mb-4 rounded text-bg-dark">
+     <div class="col-md-12 px-0">
+          <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+               <div class="carousel-inner">
+                <% for(var index = 0; index < Object.keys(slides).length; index++) {%>
+                    <div class="carousel-item <%= index == 0 ? 'active' : '' %> ">
+                        <img class="d-none d-md-block w-100 rounded" src="/photo/slide/<%= slides[index].slide_name %>" alt="<%= slides[index].slide_title %> " title="<%= slides[index].slide_title %>">
+                        <img class="d-block d-md-none w-100 rounded" src="/photo/slide/<%= slides[index].slide_mini %>" alt="<%= slides[index].slide_title %> " title="<%= slides[index].slide_title %>">
+                    </div>
+                <% } %>
+               </div>
+               <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+               </a>
+               <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+               </a>
+          </div>
+
+     </div>
+</div>

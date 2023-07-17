@@ -1,0 +1,18 @@
+<div class="col-12 my-4">
+    <% for( let index = 0; index < Object.keys(galeri).length; index++ ) { %>
+        <div class="pic-container p-3">
+            <div class="parent">
+                 <div class="wrapper thumb-1">
+                      <div class="content">
+                           <div class="img">
+                                <img src="photo/galeri/<%= galeri[index].thumbnail %> " style="object-fit: none;">
+                           </div>
+                           <div class="text">
+                                <div class="line title"><%= galeri[index].caption %> </div>
+                           </div>
+                      </div>
+                 </div>
+            </div>
+       </div>
+    <% } %>
+</div>

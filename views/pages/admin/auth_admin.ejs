@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../../admin_component/header') %>
+
+
+<body class="hold-transition login-page" style="min-height: 387.5px;background-color: white;">
+    <div style="display: none;" id="loader"></div>
+     <div class="login-box" >
+        <div class="card d-inline-block" style="box-shadow: none;">
+                <div class="login-logo mb-0 mt-3">
+                    <a href="index3.html" class="brand-link">
+                         <div class="row text-center mb-2">
+                              <img src="/static/img/logo-admin.png" alt="Outlet Pulsa" class="brand-image mx-auto" style="opacity: .8;max-height: 70px;">
+                         </div>
+                         <div class="row mt-4 text-left px-4">
+                            <span class="brand-text font-weight-bold" style="color: #495057;">LOGIN</span>
+                       </div>
+                    </a>
+               </div>
+               <div class="card-body login-card-body">
+                    <form action="auth/sign_in_process" enctype="multipart/form-data" method="post" onsubmit="sign_in(event)" id="form">
+                        <!-- <label for="exampleInputEmail1" class="form-label mt-0">LEVEL</label>
+                         <div class="input-group mb-3">
+                            <select class="form-control" name="level">
+                                <option value="superadmin">Superadmin</option>
+                                <option value="administrator_biro">Administrator Biro</option>
+                                <option value="administrator_fakultas">Administrator Fakultas</option>
+                            </select>
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-layer-group"></span>
+                                </div>
+                            </div>
+                         </div> -->
+                         <label for="exampleInputEmail1" class="form-label mt-0">USERNAME</label>
+                         <div class="input-group mb-3">
+                              <input type="text" class="form-control" placeholder="Username" name="username">
+                              <div class="input-group-append">
+                                   <div class="input-group-text">
+                                        <span class="fas fa-envelope"></span>
+                                   </div>
+                              </div>
+                         </div>
+                         <label for="exampleInputEmail1" class="form-label mt-0">PASSWORD</label>
+                         <div class="input-group mb-3">
+                              <input type="password" class="form-control" placeholder="Password" name="password">
+                              <div class="input-group-append">
+                                   <div class="input-group-text">
+                                        <span class="fas fa-lock"></span>
+                                   </div>
+                              </div>
+                         </div>
+                         <div class="row mb-3">
+                              <div class="col-12">
+                                   <button type="submit" class="btn btn-primary btn-block">Masuk</button>
+                              </div>
+                         </div>
+                         <p class="login-box-msg text-left p-0">Area ini hanya dikhususkan kepada Administrator</p>
+                    </form>
+               </div>
+          </div>
+     </div>
+     <%- include('../../admin_component/footer') %>
+     <script type="text/javascript">
+          function sign_in(e) {
+               e.preventDefault();
+               ajax_default({
+                    url: 'admin/auth',
+                    method: "post",
+                    form: true,
+                    loader:true
+               }, function(e, xhr) {
+                    smile_alert('Login Berhasil Dilakukan');
+                    window.location.href = base_url + "/admin/" + e.kode;
+               },function(e, msg){
+                    frown_alert(msg);
+               });
+          }
+     </script>
+</body>
+
+</html>

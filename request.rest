@@ -1,0 +1,22 @@
+GET http://localhost:3001/admin
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTXVhbW1hciBLYWRhZmkiLCJsZXZlbCI6ImFkbWluaXN0cmF0b3IiLCJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNjY3MTI4NTIxLCJleHAiOjE2NjcxMzA1MjF9.gsNHJZw1u2e0Tf0fI69Wc5uOTpu3NJJU-0-1RKUBeAY
+
+### 
+GET http://localhost:3001/auth
+
+###
+GET http://localhost:3001/get_token
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTXVhbW1hciBLYWRhZmkiLCJsZXZlbCI6ImFkbWluaXN0cmF0b3IiLCJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNjY4NDAwMTE5LCJleHAiOjE2Njg0MDIxMTl9.IGwoDeeQZaVxHKn7Cc2QpNY3yyzX_hGBuU2aIepZTFw
+
+
+### 
+DELETE http://localhost:3001/logout
+
+### 
+POST http://localhost:3001/auth
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password" : "admin"
+}

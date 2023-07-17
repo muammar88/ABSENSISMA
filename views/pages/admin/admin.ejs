@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../../admin_component/header') %>
+<!-- pagination -->
+<link rel="stylesheet" href="/static/template/plugins/pagination/pagination.css">
+<style>
+     .table-new thead th {
+          vertical-align: bottom;
+          border: 1px solid #dee2e6;
+          text-align: center;
+          color: #848484 !important;
+          font-size: 11px;
+     }
+     a {
+        color: #24394e;
+    }
+     .select2-selection {
+          padding-top: 3px !important;
+     }
+     .select2-selection__choice {
+          color: black !important;
+     }
+     .nav-treeview>.nav-item {
+          border-left: 2px dashed white;
+     }
+     .navbar-light .navbar-nav .nav-link {
+        color: rgb(255 255 255 / 50%);
+    }
+    .nav-sidebar .nav-treeview {
+          padding-left: 29px;
+    }
+    .nav-link {
+        color: #24394ebd !important;
+    }
+    /* .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active, .sidebar-light-primary .nav-sidebar > .nav-item >  */
+   .nav-link.active {
+        background-color: #ffc107 !important;
+        color: #fff;
+    }
+    .nav-link-light {
+        color: rgb(255 255 255 / 50%) !important;
+    }
+</style>
+
+<body class="hold-transition sidebar-mini" style="font-family: 'Rubik', sans-serif;">
+    <div style="display: none;" id="loader"></div>
+     <div class="wrapper backgrounds">
+          <%- include('../../admin_component/navbar') %>
+          <%- include('../../admin_component/sidebar') %>
+          <div class="content-wrapper" style="background-color: #e3e4e5;">
+               <%- include('../../admin_component/breadcum') %>
+               <div class="content">
+                    <div class="container-fluid" id="content-area">
+
+                    </div>
+               </div>
+          </div>
+     </div>
+     <footer class="main-footer mx-0">
+          <strong>Copyright &copy; 2023 <a href="http://unsam.ac.id">unsam.ac.id</a>.</strong>
+          All rights reserved.
+     </footer>
+     <div id="myModal" class="modal" style="z-index: 100000000;">
+          <span class="close">&times;</span>
+          <img class="modal-content" id="img01">
+          <div id="caption"></div>
+     </div>
+     <script>var kode = '<%= kode %>'; </script>
+     <script>
+          var modal = document.getElementById("myModal");
+          var modalImg = document.getElementById("img01");
+          var captionText = document.getElementById("caption");
+          var span = document.getElementsByClassName("close")[0];
+
+          // When the user clicks on <span> (x), close the modal
+          span.onclick = function() {
+               modal.style.display = "none";
+          }
+     </script>
+     </div>
+     <%- include('../../admin_component/footer') %>
+     <!-- plugin -->
+     <script src="/static/template/plugins/pagination/pagination.min.js"></script>
+     <script src="/static/template/plugins/jquery_currency/jquery_currency.js"></script>
+     <!-- beranda js -->
+     <% for( let index = 0; index < Object.keys(list).length; index++ ) { %>
+     <% if ( Object.keys(list[index].submenu).length  > 0 ) { %>
+     <% for( let index2 = 0; index2 < Object.keys(list[index].submenu).length  ; index2++ ) { %>
+     <script src="/static/app/form/<%= list[index].submenu[index2].path %>.js"></script>
+     <% } %>
+     <% } else { %>
+     <script src="/static/app/form/<%= list[index].path %>.js"></script>
+     <% } %>
+     <% } %>
+
+     <script type="text/javascript">
+          function logout_admin() {
+               ajax_default({
+                         url: "admin/" + kode + "/logout",
+                         method: "get",
+                    },
+                    function(e) {
+                         if (e.error == false) {
+                            smile_alert(e.error_msg);
+                            window.setTimeout(function() {
+                                location.reload();
+                            }, 1000);
+                         } else {
+                              frown_alert(e.error_msg);
+                         }
+                    }
+               );
+          }
+
+          function editProfil() {
+               ajax_default({
+                         url: "admin/"+kode+"/get_info_profil",
+                         method: "get",
+                    },
+                    function(e) {
+                         $.confirm({
+                              columnClass: "col-4",
+                              title: "Edit Profil <span style='text-transform:capitalize;'>" + e.data.level + "</span>",
+                              type: "blue",
+                              theme: "material",
+                              content: formEditProfil(JSON.stringify(e.data)),
+                              closeIcon: false,
+                              buttons: {
+                                   tutup: function() {
+                                        return true;
+                                   },
+                                   formSubmit: {
+                                        text: "Simpan Perubahan",
+                                        btnClass: "btn-blue",
+                                        action: function() {
+                                             var par = ajax_default({
+                                                       url: "admin/"+kode+"/update_profil",
+                                                       method: "post",
+                                                       form: true,
+                                                       return: true,
+                                                  },
+                                                  function(e, xhr) {
+                                                       return {e:e, xhr:xhr};
+                                                  }, 
+                                             );
+                                             if (par.xhr.status == 200 ) {
+                                                smile_alert(par.e.msg);
+                                                window.setTimeout(function() {
+                                                       location.reload();
+                                                }, 1000);
+                                             } else {
+                                                frown_alert(par.e.msg);
+                                                  return false;
+                                             }
+                                        },
+                                   },
+                              },
+                         });
+                    }
+               );
+          }
+
+          function formEditProfil(JSONData) {
+               var json = JSON.parse(JSONData);
+               var form = `<form id="form" class="formName" enctype="multipart/form-data" method="post">
+                            <div class="row px-0 py-3 mx-0">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label>Username</label>
+                                        <input type="text" class="form-control form-control-sm" name="username" value="${json.name}" placeholder="Nama User">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label>Password Lama</label>
+                                        <input type="password" class="form-control form-control-sm" name="pass_lama" placeholder="Password Lama">
+                                        <p class="login-box-msg text-left p-0 mt-2" style="font-size: 10px;font-style: italic;color: grey;">Password lama wajib diisi jika anda ingin merubah password lama.</p>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label>Password Baru</label>
+                                        <input type="password" class="form-control form-control-sm" name="pass_baru" placeholder="Password Baru">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label>Konfirmasi Password Baru</label>
+                                        <input type="password" class="form-control form-control-sm" name="konf_pass_baru" placeholder="Konfirmasi Password Baru">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>`;
+               return form;
+          }
+     </script>
+     <script>
+          menu('fas fa-home', 'beranda');
+     </script>
+</body>
+
+</html>
