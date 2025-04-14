@@ -1,11 +1,17 @@
 const fs = require("fs");
-const bcrypt = require("bcrypt");
+// const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 const jwt = require("jsonwebtoken");
 const { QueryTypes } = require("sequelize");
 const { dirname } = require("path");
 var request = require("request");
 const moment = require("moment");
+
+moment.locale();
+moment.updateLocale("id", {
+    weekdays: ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"],
+});
 
 const {
     Op,
@@ -14,6 +20,7 @@ const {
     Holiday,
     Izin,
     Setting,
+    Waktu_kerja,
 } = require("../../db/models");
 
 const { text_limit } = require("../../helpers/tools");
@@ -126,6 +133,140 @@ controllers.dashboard = async (req, res) => {
     });
 };
 
+// var d = await LocalDates();
+// var year = d.year;
+// var month = d.month;
+// var date = d.day;
+// var monthName = d.monthName;
+// var date_dash = d.dateDash;
+// var hours = d.hours;
+// var minutes = d.minutes;
+// var second = d.second;
+// var tanggal = date + " " + monthName + " " + year;
+// var masuk = "";
+// var keluar = "";
+// var dayName = d.dayName;
+// const time = moment().format("HH:mm", "L");
+// const time = moment().format("HH:mm", "L");
+// console.log("_________");
+// console.log(date);
+// console.log(date_dash);
+// console.log(hours);
+// console.log(minutes);
+// console.log("_________");
+
+// var j_mulai_absensi_masuk = "";
+// var m_mulai_absensi_masuk = "";
+// var j_akhir_absensi_masuk = "";
+// var m_akhir_absensi_masuk = "";
+// var j_mulai_absensi_keluar = "";
+// var m_mulai_absensi_keluar = "";
+// var j_akhir_absensi_keluar = "";
+// var m_akhir_absensi_keluar = "";
+// var hari_libur_mingguan = "";
+
+// await Setting.findAll({
+//     attributes: ["setting_name", "setting_value"],
+// }).then(async (value) => {
+//     if (value) {
+//         value.forEach(async (e) => {
+//             if (e.setting_name == "mulai_absensi_masuk") {
+//                 var exp = e.setting_value.split(":");
+//                 j_mulai_absensi_masuk = exp[0];
+//                 m_mulai_absensi_masuk = exp[1];
+//             }
+//             if (e.setting_name == "akhir_absensi_masuk") {
+//                 var exp = e.setting_value.split(":");
+//                 j_akhir_absensi_masuk = exp[0];
+//                 m_akhir_absensi_masuk = exp[1];
+//             }
+//             if (e.setting_name == "mulai_absensi_keluar") {
+//                 var exp = e.setting_value.split(":");
+//                 j_mulai_absensi_keluar = exp[0];
+//                 m_mulai_absensi_keluar = exp[1];
+//             }
+//             if (e.setting_name == "akhir_absensi_keluar") {
+//                 var exp = e.setting_value.split(":");
+//                 j_akhir_absensi_keluar = exp[0];
+//                 m_akhir_absensi_keluar = exp[1];
+//             }
+//             if (e.setting_name == "hari_libur_mingguan") {
+//                 hari_libur_mingguan = JSON.parse(e.setting_value);
+//             }
+//             if (e.setting_name == "letitude") {
+//                 letitude = e.setting_value;
+//             }
+//             if (e.setting_name == "longitude") {
+//                 longitude = e.setting_value;
+//             }
+//             if (e.setting_name == "jarak") {
+//                 jarak_min = e.setting_value;
+//             }
+//         });
+//     }
+// });
+// var fixDate = new Date(date_dash);
+// if (status == "active") {
+//     var holiday = {};
+//     var i = 0;
+//     await Holiday.findAll({
+//         attributes: ["id", "repeat", "dateHoliday"],
+//     }).then(async (e) => {
+//         if (e) {
+//             e.forEach(async (value) => {
+//                 if (value.repeat == "annually") {
+//                     var dates = moment(value.dateHoliday, "YYYY-MM-DD");
+//                     var dy = dates.format("DD");
+//                     var mon = dates.format("MM");
+//                     const y = dates.format("YYYY");
+//                     if (year != y) {
+//                         // looping
+//                         for (var j = y; j <= year; j++) {
+//                             var newDate = moment(
+//                                 j + "-" + mon + "-" + dy,
+//                                 "YYYY-MM-DD"
+//                             ).format("YYYY-MM-DD");
+//                             if (
+//                                 Object.values(holiday).indexOf(newDate) >=
+//                                     0 ==
+//                                 false
+//                             ) {
+//                                 holiday[i] = newDate;
+//                                 i++;
+//                             }
+//                         }
+//                     } else {
+//                         var newDate = moment(
+//                             yee + "-" + mon + "-" + dy,
+//                             "YYYY-MM-DD"
+//                         ).format("YYYY-MM-DD");
+
+//                         if (
+//                             Object.values(holiday).indexOf(newDate) >= 0 ==
+//                             false
+//                         ) {
+//                             holiday[i] = newDate;
+//                             i++;
+//                         }
+//                     }
+//                 } else {
+//                     if (
+//                         Object.values(holiday).indexOf(newDate) >= 0 ==
+//                         false
+//                     ) {
+//                         holiday[i] = value.dateHoliday;
+//                         i++;
+//                     }
+//                 }
+//             });
+//         }
+//     });
+//     var newFixDate = moment(fixDate, "YYYY-MM-DD").format("YYYY-MM-DD");
+//     if (Object.values(holiday).indexOf(newFixDate) >= 0 == true) {
+//         status = "holiday";
+//     }
+// }
+
 controllers.dataDashboard = async (req, res) => {
     const param = req.params;
     var kode = param.kode;
@@ -142,206 +283,65 @@ controllers.dataDashboard = async (req, res) => {
         }
     });
 
-    var d = await LocalDates();
-    var year = d.year;
-    var month = d.month;
-    var date = d.day;
-    var monthName = d.monthName;
-    var date_dash = d.dateDash;
+    // mendefinisikan waktu dan tanggal
+    const year = moment().format("YYYY", "L");
+    const month = moment().format("MM", "L");
+    const date = moment().format("DD", "L");
+    const monthName = moment().format("MMMM", "L");
+    const date_dash = moment().format("YYYY-MM-DD", "L");
+    const hours = moment().format("HH", "L");
+    const minutes = moment().format("mm", "L");
+    const second = parseInt(moment().format("mm", "L"));
+    const tanggal = moment().format("DD MMMM YYYY", "L");
+    const dayName = moment().format("dddd", "L");
 
-    var hours = d.hours;
-    var minutes = d.minutes;
-    var second = d.second;
-
-    var tanggal = date + " " + monthName + " " + year;
-    var status = "active";
     var masuk = "";
     var keluar = "";
+    var status = "active";
     var totalKerja = "00hr00minutes";
-    var dayName = d.dayName;
 
-    var j_mulai_absensi_masuk = "";
-    var m_mulai_absensi_masuk = "";
-    var j_akhir_absensi_masuk = "";
-    var m_akhir_absensi_masuk = "";
-    var j_mulai_absensi_keluar = "";
-    var m_mulai_absensi_keluar = "";
-    var j_akhir_absensi_keluar = "";
-    var m_akhir_absensi_keluar = "";
-    var hari_libur_mingguan = "";
-
-    await Setting.findAll({
-        attributes: ["setting_name", "setting_value"],
-    }).then(async (value) => {
-        if (value) {
-            value.forEach(async (e) => {
-                if (e.setting_name == "mulai_absensi_masuk") {
-                    var exp = e.setting_value.split(":");
-                    j_mulai_absensi_masuk = exp[0];
-                    m_mulai_absensi_masuk = exp[1];
-                }
-                if (e.setting_name == "akhir_absensi_masuk") {
-                    var exp = e.setting_value.split(":");
-                    j_akhir_absensi_masuk = exp[0];
-                    m_akhir_absensi_masuk = exp[1];
-                }
-                if (e.setting_name == "mulai_absensi_keluar") {
-                    var exp = e.setting_value.split(":");
-                    j_mulai_absensi_keluar = exp[0];
-                    m_mulai_absensi_keluar = exp[1];
-                }
-                if (e.setting_name == "akhir_absensi_keluar") {
-                    var exp = e.setting_value.split(":");
-                    j_akhir_absensi_keluar = exp[0];
-                    m_akhir_absensi_keluar = exp[1];
-                }
-                if (e.setting_name == "hari_libur_mingguan") {
-                    hari_libur_mingguan = JSON.parse(e.setting_value);
-                }
-                if (e.setting_name == "letitude") {
-                    letitude = e.setting_value;
-                }
-                if (e.setting_name == "longitude") {
-                    longitude = e.setting_value;
-                }
-                if (e.setting_name == "jarak") {
-                    jarak_min = e.setting_value;
-                }
-            });
-        }
-    });
-    for (x in hari_libur_mingguan) {
+    // mengambil nilai setting pada database
+    const settingValue = await getSettingValue();
+    // melakukan pengecekan hari libur mingguan
+    for (x in settingValue.hari_libur_mingguan) {
         if (x.toUpperCase() == dayName.toUpperCase()) {
             status = "weekend";
         }
     }
-    var fixDate = new Date(date_dash);
+    // mengecek hari libur nasional
     if (status == "active") {
-        var holiday = {};
-        var i = 0;
-        await Holiday.findAll({
-            attributes: ["id", "repeat", "dateHoliday"],
-        }).then(async (e) => {
-            if (e) {
-                e.forEach(async (value) => {
-                    if (value.repeat == "annually") {
-                        var dates = moment(value.dateHoliday, "YYYY-MM-DD");
-                        var dy = dates.format("DD");
-                        var mon = dates.format("MM");
-                        const y = dates.format("YYYY");
-                        if (year != y) {
-                            // looping
-                            for (var j = y; j <= year; j++) {
-                                var newDate = moment(
-                                    j + "-" + mon + "-" + dy,
-                                    "YYYY-MM-DD"
-                                ).format("YYYY-MM-DD");
-                                if (
-                                    Object.values(holiday).indexOf(newDate) >=
-                                        0 ==
-                                    false
-                                ) {
-                                    holiday[i] = newDate;
-                                    i++;
-                                }
-                            }
-                        } else {
-                            var newDate = moment(
-                                yee + "-" + mon + "-" + dy,
-                                "YYYY-MM-DD"
-                            ).format("YYYY-MM-DD");
-
-                            if (
-                                Object.values(holiday).indexOf(newDate) >= 0 ==
-                                false
-                            ) {
-                                holiday[i] = newDate;
-                                i++;
-                            }
-                        }
-                    } else {
-                        if (
-                            Object.values(holiday).indexOf(newDate) >= 0 ==
-                            false
-                        ) {
-                            holiday[i] = value.dateHoliday;
-                            i++;
-                        }
-                    }
-                });
-            }
-        });
-        var newFixDate = moment(fixDate, "YYYY-MM-DD").format("YYYY-MM-DD");
-        if (Object.values(holiday).indexOf(newFixDate) >= 0 == true) {
-            status = "holiday";
-        }
+        status = await getHoliday(status, date_dash);
     }
+    // // check dinas luar
+    // if (status == "active") {
+    //     const izin = await Izin.findAll({
+    //         attributes: ["id", "start_date", "end_date"],
+    //         where: { memberId: memberId },
+    //     });
+    //     izin.forEach(async (e) => {
+    //         let start_date = new Date(e.start_date).getTime();
+    //         let end_date = new Date(e.end_date).getTime();
+    //         if (start_date <= date_dash && end_date >= date_dash) {
+    //             status = "dl";
+    //         }
+    //     });
+    // }
     // check dinas luar
     if (status == "active") {
-        const izin = await Izin.findAll({
-            attributes: ["id", "start_date", "end_date"],
-            where: { memberId: memberId },
-        });
-        izin.forEach(async (e) => {
-            let start_date = new Date(e.start_date).getTime();
-            let end_date = new Date(e.end_date).getTime();
-            if (start_date <= date_dash && end_date >= date_dash) {
-                status = "dl";
-            }
-        });
+        status = await checkDinasLuar(memberId, status, date_dash);
     }
-    // status = "active";
+    // check in time
     if (status == "active") {
-        let intime = false;
-        let posisi = "";
-
-        if (hours >= j_mulai_absensi_masuk && hours <= j_akhir_absensi_masuk) {
-            if (
-                hours == j_mulai_absensi_masuk &&
-                minutes >= m_mulai_absensi_masuk
-            ) {
-                intime = true;
-                posisi = "masuk";
-            } else if (
-                hours == j_akhir_absensi_masuk &&
-                minutes <= m_akhir_absensi_masuk
-            ) {
-                intime = true;
-                posisi = "masuk";
-            } else if (
-                hours > j_mulai_absensi_masuk &&
-                hours < j_akhir_absensi_masuk
-            ) {
-                intime = true;
-                posisi = "masuk";
-            }
-        } else if (
-            hours >= j_mulai_absensi_keluar &&
-            hours <= j_akhir_absensi_keluar
-        ) {
-            if (
-                hours == j_mulai_absensi_keluar &&
-                minutes >= m_mulai_absensi_keluar
-            ) {
-                intime = true;
-                posisi = "keluar";
-            } else if (
-                hours == j_akhir_absensi_keluar &&
-                minutes == m_akhir_absensi_keluar
-            ) {
-                intime = true;
-                posisi = "keluar";
-            } else if (
-                hours > j_mulai_absensi_keluar &&
-                hours < j_akhir_absensi_keluar
-            ) {
-                intime = true;
-                posisi = "keluar";
-            }
-        }
-        if (intime == false) {
+        inTimeCheck = await checkIntime({
+            hours,
+            minutes,
+            dayName,
+        });
+        if (inTimeCheck.intime == false) {
             status = "outtime";
         }
+        posisi = inTimeCheck.posisi;
+
         // get info absensi
         await Absensi.findAll({
             limit: 1,
@@ -355,7 +355,7 @@ controllers.dataDashboard = async (req, res) => {
                 },
             },
             where: {
-                tanggal: { [Op.like]: fixDate },
+                tanggal: { [Op.like]: date_dash },
             },
         }).then(async (value) => {
             if (value) {
@@ -380,12 +380,154 @@ controllers.dataDashboard = async (req, res) => {
             }
         });
     }
+    // // status = "active";
+    // if (status == "active") {
+    //     let intime = false;
+    //     let posisi = "";
+
+    //     console.log("_____________1");
+    //     console.log(hours);
+    //     console.log(j_mulai_absensi_masuk);
+    //     console.log(m_mulai_absensi_masuk);
+    //     console.log(j_akhir_absensi_masuk);
+    //     console.log(m_akhir_absensi_masuk);
+    //     console.log("_____________1");
+    //     console.log("_____________1AAA");
+    //     console.log(hours);
+    //     console.log(j_mulai_absensi_keluar);
+    //     console.log(j_akhir_absensi_keluar);
+    //     console.log("_____________1AAA");
+    //     h = hours;
+    //     m = minutes;
+    //     if (hours >= j_mulai_absensi_masuk && hours <= j_akhir_absensi_masuk) {
+    //         console.log("_____________1");
+
+    //         h1 = j_mulai_absensi_masuk;
+    //         h2 = j_akhir_absensi_masuk;
+    //         m1 = m_mulai_absensi_masuk;
+    //         m2 = m_akhir_absensi_masuk;
+
+    //         if (
+    //             (h1 < h || (h1 == h && m1 <= m)) &&
+    //             (h < h2 || (h == h2 && m <= m2))
+    //         ) {
+    //             intime = true;
+    //             posisi = "masuk";
+    //         }
+
+    //         // if (
+    //         //     hours == j_mulai_absensi_masuk &&
+    //         //     minutes >= m_mulai_absensi_masuk
+    //         // ) {
+    //         //     console.log("_____________2");
+    //         //     intime = true;
+    //         //     posisi = "masuk";
+    //         // } else if (
+    //         //     hours == j_akhir_absensi_masuk &&
+    //         //     minutes <= m_akhir_absensi_masuk
+    //         // ) {
+    //         //     console.log("_____________3");
+    //         //     intime = true;
+    //         //     posisi = "masuk";
+    //         // } else if (
+    //         //     hours > j_mulai_absensi_masuk &&
+    //         //     hours < j_akhir_absensi_masuk
+    //         // ) {
+    //         //     console.log("_____________4");
+    //         //     intime = true;
+    //         //     posisi = "masuk";
+    //         // }
+    //     } else if (
+    //         hours >= j_mulai_absensi_keluar &&
+    //         hours <= j_akhir_absensi_keluar
+    //     ) {
+    //         console.log("_____________5");
+
+    //         // h = hours;
+    //         // m = minutes;
+    //         h1 = j_mulai_absensi_keluar;
+    //         h2 = j_akhir_absensi_keluar;
+    //         m1 = m_mulai_absensi_keluar;
+    //         m2 = m_akhir_absensi_keluar;
+
+    //         if (
+    //             (h1 < h || (h1 == h && m1 <= m)) &&
+    //             (h < h2 || (h == h2 && m <= m2))
+    //         ) {
+    //             intime = true;
+    //             posisi = "keluar";
+    //         }
+
+    //         // if (
+    //         //     hours == j_mulai_absensi_keluar &&
+    //         //     minutes >= m_mulai_absensi_keluar
+    //         // ) {
+    //         //     console.log("_____________6");
+    //         //     intime = true;
+    //         //     posisi = "keluar";
+    //         // } else if (
+    //         //     hours == j_akhir_absensi_keluar &&
+    //         //     minutes == m_akhir_absensi_keluar
+    //         // ) {
+    //         //     console.log("_____________7");
+    //         //     intime = true;
+    //         //     posisi = "keluar";
+    //         // } else if (
+    //         //     hours > j_mulai_absensi_keluar &&
+    //         //     hours < j_akhir_absensi_keluar
+    //         // ) {
+    //         //     console.log("_____________8");
+    //         //     intime = true;
+    //         //     posisi = "keluar";
+    //         // }
+    //     }
+    //     if (intime == false) {
+    //         status = "outtime";
+    //     }
+    //     // get info absensi
+    //     await Absensi.findAll({
+    //         limit: 1,
+    //         attributes: ["id", "masuk", "keluar", "tanggal"],
+    //         include: {
+    //             required: true,
+    //             model: Member,
+    //             attributes: ["nama", "nip"],
+    //             where: {
+    //                 kode: kode,
+    //             },
+    //         },
+    //         where: {
+    //             tanggal: { [Op.like]: fixDate },
+    //         },
+    //     }).then(async (value) => {
+    //         if (value) {
+    //             value.forEach(async (e) => {
+    //                 if (e.masuk != null) {
+    //                     var exp = e.masuk.split(":");
+    //                     masuk = exp[0] + ":" + exp[1];
+    //                 }
+    //                 if (e.keluar != null) {
+    //                     var exp = e.keluar.split(":");
+    //                     keluar = exp[0] + ":" + exp[1];
+    //                 }
+    //             });
+
+    //             if (status == "active") {
+    //                 if (masuk != "" && posisi == "masuk") {
+    //                     status = "lock";
+    //                 } else if (keluar != "" && posisi == "keluar") {
+    //                     status = "lock";
+    //                 }
+    //             }
+    //         }
+    //     });
+    // }
 
     var start_date = masuk != "" ? date_dash + " " + masuk + ":00" : "";
     var end_date = keluar != "" ? date_dash + " " + keluar + ":00" : "";
     var rest_start = date_dash + " " + "12:30:00";
     var rest_end =
-        date_dash + " " + (dayName == "jum'at" ? "14:00:00" : "13:30:00");
+        date_dash + " " + (dayName == "Jumat" ? "14:00:00" : "13:30:00");
 
     totalKerja = await calculateDays(
         start_date,
@@ -438,6 +580,250 @@ function getDistanceBetweenPoints(
     }
 }
 
+const getSettingValue = async () => {
+    var j_mulai_absensi_masuk = "";
+    var m_mulai_absensi_masuk = "";
+    var j_akhir_absensi_masuk = "";
+    var m_akhir_absensi_masuk = "";
+    var j_mulai_absensi_keluar = "";
+    var m_mulai_absensi_keluar = "";
+    var j_akhir_absensi_keluar = "";
+    var m_akhir_absensi_keluar = "";
+    var hari_libur_mingguan = "";
+    var jarak_min = 0;
+    var jam_kerja = 0;
+    var letitude_pusat = 0.0;
+    var longitude_pusat = 0.0;
+
+    await Setting.findAll({
+        attributes: ["setting_name", "setting_value"],
+    }).then(async (value) => {
+        if (value) {
+            value.forEach(async (e) => {
+                if (e.setting_name == "mulai_absensi_masuk") {
+                    var exp = e.setting_value.split(":");
+                    j_mulai_absensi_masuk = exp[0];
+                    m_mulai_absensi_masuk = exp[1];
+                }
+                if (e.setting_name == "akhir_absensi_masuk") {
+                    var exp = e.setting_value.split(":");
+                    j_akhir_absensi_masuk = exp[0];
+                    m_akhir_absensi_masuk = exp[1];
+                }
+                if (e.setting_name == "mulai_absensi_keluar") {
+                    var exp = e.setting_value.split(":");
+                    j_mulai_absensi_keluar = exp[0];
+                    m_mulai_absensi_keluar = exp[1];
+                }
+                if (e.setting_name == "akhir_absensi_keluar") {
+                    var exp = e.setting_value.split(":");
+                    j_akhir_absensi_keluar = exp[0];
+                    m_akhir_absensi_keluar = exp[1];
+                }
+                if (e.setting_name == "hari_libur_mingguan") {
+                    hari_libur_mingguan = JSON.parse(e.setting_value);
+                }
+
+                if (e.setting_name == "letitude") {
+                    letitude_pusat = e.setting_value;
+                }
+
+                if (e.setting_name == "longitude") {
+                    longitude_pusat = e.setting_value;
+                }
+
+                if (e.setting_name == "jarak") {
+                    jarak_min = e.setting_value;
+                }
+
+                if ((e.setting_name = "jam_kerja")) {
+                    jam_kerja = e.setting_value;
+                }
+            });
+        }
+    });
+
+    return {
+        j_mulai_absensi_masuk,
+        m_mulai_absensi_masuk,
+        j_akhir_absensi_masuk,
+        m_akhir_absensi_masuk,
+        j_mulai_absensi_keluar,
+        m_mulai_absensi_keluar,
+        j_akhir_absensi_keluar,
+        m_akhir_absensi_keluar,
+        hari_libur_mingguan,
+        jarak_min,
+        letitude_pusat,
+        longitude_pusat,
+        jam_kerja,
+    };
+};
+
+const getHoliday = async (status, now) => {
+    var holiday = {};
+    await Holiday.findAll({
+        attributes: ["id", "repeat", "dateHoliday"],
+    }).then(async (values) => {
+        var i = 0;
+        await Promise.all(
+            values.map(async (value) => {
+                if (value.repeat == "annually") {
+                    var newDate = moment(value.dateHoliday)
+                        .year(moment().year())
+                        .format("YYYY-MM-DD", "L");
+                    if (Object.values(holiday).indexOf(newDate) >= 0 == false) {
+                        holiday[i] = newDate;
+                        i++;
+                    }
+                } else {
+                    if (Object.values(holiday).indexOf(newDate) >= 0 == false) {
+                        holiday[i] = value.dateHoliday;
+                        i++;
+                    }
+                }
+            })
+        );
+    });
+
+    if (Object.values(holiday).indexOf(now) >= 0 == true) {
+        status = "holiday";
+    }
+    return status;
+};
+
+const checkDinasLuar = async (memberId, status, dateNow) => {
+    const izin = await Izin.findAll({
+        attributes: ["id", "start_date", "end_date"],
+        where: { memberId: memberId },
+    });
+    izin.forEach(async (e) => {
+        let between = moment(dateNow).isBetween(e.start_date, e.end_date);
+        if (between) {
+            status = "dl";
+        }
+    });
+    return status;
+};
+
+const checkIntime = async (time) => {
+    var j_mulai_absensi_masuk = "";
+    var m_mulai_absensi_masuk = "";
+    var j_akhir_absensi_masuk = "";
+    var m_akhir_absensi_masuk = "";
+    var j_mulai_absensi_keluar = "";
+    var m_mulai_absensi_keluar = "";
+    var j_akhir_absensi_keluar = "";
+    var m_akhir_absensi_keluar = "";
+
+    await Waktu_kerja.findOne({
+        where: { hari: time.dayName },
+    }).then(async (val) => {
+        if (val) {
+            if (val.mulai_absensi_masuk != null) {
+                var exp = val.mulai_absensi_masuk.split(":");
+                j_mulai_absensi_masuk = exp[0];
+                m_mulai_absensi_masuk = exp[1];
+            }
+            if (val.akhir_absensi_masuk != null) {
+                var exp = val.akhir_absensi_masuk.split(":");
+                j_akhir_absensi_masuk = exp[0];
+                m_akhir_absensi_masuk = exp[1];
+            }
+            if (val.mulai_absensi_keluar != null) {
+                var exp = val.mulai_absensi_keluar.split(":");
+                j_mulai_absensi_keluar = exp[0];
+                m_mulai_absensi_keluar = exp[1];
+            }
+            if (val.akhir_absensi_keluar != null) {
+                var exp = val.akhir_absensi_keluar.split(":");
+                j_akhir_absensi_keluar = exp[0];
+                m_akhir_absensi_keluar = exp[1];
+            }
+        }
+    });
+
+    let intime = false;
+    let posisi = "";
+    if (
+        time.hours >= j_mulai_absensi_masuk &&
+        time.hours <= j_akhir_absensi_masuk
+    ) {
+        if (
+            time.hours == j_mulai_absensi_masuk &&
+            time.minutes >= m_mulai_absensi_masuk
+        ) {
+            intime = true;
+            posisi = "masuk";
+        } else if (
+            time.hours == j_akhir_absensi_masuk &&
+            time.minutes <= m_akhir_absensi_masuk
+        ) {
+            intime = true;
+            posisi = "masuk";
+        } else if (
+            time.hours > j_mulai_absensi_masuk &&
+            time.hours < j_akhir_absensi_masuk
+        ) {
+            intime = true;
+            posisi = "masuk";
+        }
+    } else if (
+        time.hours >= j_mulai_absensi_keluar &&
+        time.hours <= j_akhir_absensi_keluar
+    ) {
+        if (
+            time.hours == j_mulai_absensi_keluar &&
+            time.minutes >= m_mulai_absensi_keluar
+        ) {
+            intime = true;
+            posisi = "keluar";
+        } else if (
+            time.hours == j_akhir_absensi_keluar &&
+            time.minutes == m_akhir_absensi_keluar
+        ) {
+            intime = true;
+            posisi = "keluar";
+        } else if (
+            time.hours > j_mulai_absensi_keluar &&
+            time.hours < j_akhir_absensi_keluar
+        ) {
+            intime = true;
+            posisi = "keluar";
+        }
+    }
+    return { intime, posisi };
+};
+
+const checkIPExist = async (ip, kode) => {
+    const TODAY_START = new Date().setHours(0, 0, 0, 0);
+    const NOW = new Date();
+
+    const q_total = await Absensi.findAndCountAll({
+        include: [
+            {
+                required: true,
+                model: Member,
+                where: {
+                    kode: {
+                        [Op.ne]: kode,
+                    },
+                },
+            },
+        ],
+        where: {
+            ip: ip,
+            createdAt: {
+                [Op.gt]: TODAY_START,
+                [Op.lt]: NOW,
+            },
+        },
+    });
+    const total = await q_total.count;
+
+    return total > 0 ? false : true;
+};
+
 controllers.absensi = async function (req, res) {
     const errors = validationResult(req); // validator const
     if (!errors.isEmpty()) {
@@ -451,11 +837,40 @@ controllers.absensi = async function (req, res) {
         });
         res.status(400).json({ msg: err_msg });
     } else {
-        var ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
-        var body = req.body;
-
+        // mengambil informasi ip
+        const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+        const body = req.body;
         const param = req.params;
-        var kode = param.kode;
+        const kode = param.kode;
+        // if (await checkIPExist(ip, kode)) {
+        // mendefinisikan waktu dan tanggal
+        const year = moment().format("YYYY", "L");
+        const month = moment().format("MM", "L");
+        const date = moment().format("DD", "L");
+        const monthName = moment().format("MMMM", "L");
+        const date_dash = moment().format("YYYY-MM-DD", "L");
+        const hours = moment().format("HH", "L");
+        const minutes = moment().format("mm", "L");
+        const time = moment().format("HH:mm", "L");
+        const tanggal = moment().format("DD MMMM YYYY", "L");
+        const dayName = moment().format("dddd", "L");
+        // mengambil nilai setting pada database
+        const settingValue = await getSettingValue();
+        // mendefinisikan jarak
+        const jarak = getDistanceBetweenPoints(
+            body.latitude,
+            body.longitude,
+            settingValue.letitude_pusat,
+            settingValue.longitude_pusat,
+            "meters"
+        );
+        // mendefinisikan status
+        var status = "active";
+        // mendefinisikan total kerja
+        var totalKerja = "00hr00minutes";
+        // posisi
+        var posisi = "";
+        // mengambil nilai informasi member di database
         var fullname;
         var memberId;
         await Member.findOne({
@@ -466,289 +881,68 @@ controllers.absensi = async function (req, res) {
                 memberId = value.id;
             }
         });
-
-        var d = await LocalDates();
-        var year = d.year;
-        var month = d.month;
-        var date = d.day;
-        var monthName = d.monthName;
-        var date_dash = d.dateDash;
-        var hours = d.hours;
-        var minutes = d.minutes;
-        let time = hours + ":" + minutes;
-        var tanggal = date + " " + monthName + " " + year;
-        var status = "active";
-        var totalKerja = "00hr00minutes";
-        var dayName = d.dayName;
-
-        var j_mulai_absensi_masuk = "";
-        var m_mulai_absensi_masuk = "";
-        var j_akhir_absensi_masuk = "";
-        var m_akhir_absensi_masuk = "";
-        var j_mulai_absensi_keluar = "";
-        var m_mulai_absensi_keluar = "";
-        var j_akhir_absensi_keluar = "";
-        var m_akhir_absensi_keluar = "";
-        var hari_libur_mingguan = "";
-
-        var jarak_min = 0;
-        var letitude_pusat = 0.0;
-        var longitude_pusat = 0.0;
-
-        await Setting.findAll({
-            attributes: ["setting_name", "setting_value"],
-        }).then(async (value) => {
-            if (value) {
-                value.forEach(async (e) => {
-                    if (e.setting_name == "mulai_absensi_masuk") {
-                        var exp = e.setting_value.split(":");
-                        j_mulai_absensi_masuk = exp[0];
-                        m_mulai_absensi_masuk = exp[1];
-                    }
-                    if (e.setting_name == "akhir_absensi_masuk") {
-                        var exp = e.setting_value.split(":");
-                        j_akhir_absensi_masuk = exp[0];
-                        m_akhir_absensi_masuk = exp[1];
-                    }
-                    if (e.setting_name == "mulai_absensi_keluar") {
-                        var exp = e.setting_value.split(":");
-                        j_mulai_absensi_keluar = exp[0];
-                        m_mulai_absensi_keluar = exp[1];
-                    }
-                    if (e.setting_name == "akhir_absensi_keluar") {
-                        var exp = e.setting_value.split(":");
-                        j_akhir_absensi_keluar = exp[0];
-                        m_akhir_absensi_keluar = exp[1];
-                    }
-                    if (e.setting_name == "hari_libur_mingguan") {
-                        console.log("e.setting_value");
-                        console.log(e.setting_value);
-                        console.log(typeof e.setting_value);
-                        console.log("e.setting_value");
-                        hari_libur_mingguan = JSON.parse(e.setting_value);
-                    }
-
-                    if (e.setting_name == "letitude") {
-                        letitude_pusat = e.setting_value;
-                    }
-
-                    if (e.setting_name == "longitude") {
-                        longitude_pusat = e.setting_value;
-                    }
-
-                    if (e.setting_name == "jarak") {
-                        jarak_min = e.setting_value;
-                    }
-                });
-            }
-        });
-
-        var jarak = getDistanceBetweenPoints(
-            body.latitude,
-            body.longitude,
-            letitude_pusat,
-            longitude_pusat,
-            "meters"
-        );
-
-        if (jarak > jarak_min) {
+        // check jarak
+        if (jarak > settingValue.jarak_min) {
             status = "luar_posisi";
         }
-
+        // melakukan pengecekan hari libur mingguan
         if (status == "active") {
-            for (x in hari_libur_mingguan) {
+            for (x in settingValue.hari_libur_mingguan) {
                 if (x.toUpperCase() == dayName.toUpperCase()) {
                     status = "weekend";
                 }
             }
         }
-        var fixDate = new Date(date_dash);
-        // check holiday
+        // mengecek hari libur nasional
         if (status == "active") {
-            var holiday = {};
-            var i = 0;
-            await Holiday.findAll({
-                attributes: ["id", "repeat", "dateHoliday"],
-            }).then(async (e) => {
-                if (e) {
-                    e.forEach(async (value) => {
-                        if (value.repeat == "annually") {
-                            var dates = moment(value.dateHoliday, "YYYY-MM-DD");
-                            var dy = dates.format("DD");
-                            var mon = dates.format("MM");
-                            const y = dates.format("YYYY");
-                            if (year != y) {
-                                // looping
-                                for (var j = y; j <= year; j++) {
-                                    var newDate = moment(
-                                        j + "-" + mon + "-" + dy,
-                                        "YYYY-MM-DD"
-                                    ).format("YYYY-MM-DD");
-                                    if (
-                                        Object.values(holiday).indexOf(
-                                            newDate
-                                        ) >=
-                                            0 ==
-                                        false
-                                    ) {
-                                        holiday[i] = newDate;
-                                        i++;
-                                    }
-                                }
-                            } else {
-                                var newDate = moment(
-                                    yee + "-" + mon + "-" + dy,
-                                    "YYYY-MM-DD"
-                                ).format("YYYY-MM-DD");
-
-                                if (
-                                    Object.values(holiday).indexOf(newDate) >=
-                                        0 ==
-                                    false
-                                ) {
-                                    holiday[i] = newDate;
-                                    i++;
-                                }
-                            }
-                        } else {
-                            if (
-                                Object.values(holiday).indexOf(newDate) >= 0 ==
-                                false
-                            ) {
-                                holiday[i] = value.dateHoliday;
-                                i++;
-                            }
-                        }
-                    });
-                }
-            });
-            var newFixDate = moment(fixDate, "YYYY-MM-DD").format("YYYY-MM-DD");
-            if (Object.values(holiday).indexOf(newFixDate) >= 0 == true) {
-                status = "holiday";
-            }
+            status = await getHoliday(status, date_dash);
         }
         // check dinas luar
         if (status == "active") {
-            const izin = await Izin.findAll({
-                attributes: ["id", "start_date", "end_date"],
-                where: { memberId: memberId },
-            });
-            izin.forEach(async (e) => {
-                let start_date = new Date(e.start_date).getTime();
-                let end_date = new Date(e.end_date).getTime();
-                if (start_date <= date_dash && end_date >= date_dash) {
-                    status = "dl";
-                }
-            });
+            status = await checkDinasLuar(memberId, status, date_dash);
         }
-        // check status active
+        // check in time
         if (status == "active") {
-            let intime = false;
-            let posisi = "";
-            if (
-                hours >= j_mulai_absensi_masuk &&
-                hours <= j_akhir_absensi_masuk
-            ) {
-                if (
-                    hours == j_mulai_absensi_masuk &&
-                    minutes >= m_mulai_absensi_masuk
-                ) {
-                    intime = true;
-                    posisi = "masuk";
-                } else if (
-                    hours == j_akhir_absensi_masuk &&
-                    minutes <= m_akhir_absensi_masuk
-                ) {
-                    intime = true;
-                    posisi = "masuk";
-                } else if (
-                    hours > j_mulai_absensi_masuk &&
-                    hours < j_akhir_absensi_masuk
-                ) {
-                    intime = true;
-                    posisi = "masuk";
-                }
-            } else if (
-                hours >= j_mulai_absensi_keluar &&
-                hours <= j_akhir_absensi_keluar
-            ) {
-                if (
-                    hours == j_mulai_absensi_keluar &&
-                    minutes >= m_mulai_absensi_keluar
-                ) {
-                    intime = true;
-                    posisi = "keluar";
-                } else if (
-                    hours == j_akhir_absensi_keluar &&
-                    minutes == m_akhir_absensi_keluar
-                ) {
-                    intime = true;
-                    posisi = "keluar";
-                } else if (
-                    hours > j_mulai_absensi_keluar &&
-                    hours < j_akhir_absensi_keluar
-                ) {
-                    intime = true;
-                    posisi = "keluar";
-                }
+            inTimeCheck = await checkIntime({
+                hours,
+                minutes,
+                dayName,
+            });
+            if (inTimeCheck.intime == false) {
+                status = "outtime";
             }
-            intime = true;
-            // check intime
-            if (intime) {
-                await Absensi.findAll({
-                    limit: 1,
-                    attributes: ["id", "masuk", "keluar", "tanggal"],
-                    where: {
-                        tanggal: { [Op.like]: fixDate },
-                        memberId: memberId,
-                    },
-                }).then(async (value) => {
-                    if (value.length > 0) {
-                        var masuk = "";
-                        var keluar = "";
-                        var id = "";
-                        value.forEach(async (e) => {
-                            id = e.id;
-                            masuk = e.masuk;
-                            keluar = e.keluar;
-                            tanggal = e.tanggal;
-                        });
-                        if (posisi == "masuk" && masuk != null) {
-                            res.status(404).json(
-                                "Absensi untuk masuk hari ini sudah pernah dilakukan"
-                            );
-                        } else if (posisi == "keluar" && keluar != null) {
-                            res.status(404).json(
-                                "Absensi untuk keluar hari ini sudah pernah dilakukan"
-                            );
-                        } else {
-                            const data = {};
-                            if (posisi == "masuk") {
-                                data["masuk"] = time;
-                                data["latitude_masuk"] = body.latitude;
-                                data["longitude_masuk"] = body.longitude;
-                            } else {
-                                data["keluar"] = time;
-                                data["latitude_keluar"] = body.latitude;
-                                data["longitude_keluar"] = body.longitude;
-                            }
-                            data["updatedAt"] = new Date();
-                            await Absensi.update(data, {
-                                where: { id: id },
-                            }).then(async (value) => {
-                                res.status(200).json({
-                                    msg:
-                                        "Proses absensi " +
-                                        posisi +
-                                        " berhasil dilakukan",
-                                });
-                            });
-                        }
+            posisi = inTimeCheck.posisi;
+        }
+        // check jika sudah melakukan absensi
+        if (status == "active") {
+            await Absensi.findAll({
+                limit: 1,
+                attributes: ["id", "masuk", "keluar", "tanggal"],
+                where: {
+                    tanggal: { [Op.like]: date_dash },
+                    memberId: memberId,
+                },
+            }).then(async (value) => {
+                if (value.length > 0) {
+                    var masuk = "";
+                    var keluar = "";
+                    var id = "";
+                    value.forEach(async (e) => {
+                        id = e.id;
+                        masuk = e.masuk;
+                        keluar = e.keluar;
+                        tanggal = e.tanggal;
+                    });
+                    if (posisi == "masuk" && masuk != null) {
+                        res.status(404).json(
+                            "Absensi untuk masuk hari ini sudah pernah dilakukan"
+                        );
+                    } else if (posisi == "keluar" && keluar != null) {
+                        res.status(404).json(
+                            "Absensi untuk keluar hari ini sudah pernah dilakukan"
+                        );
                     } else {
-                        const data = {};
-                        data["memberId"] = memberId;
-                        data["ip"] = ip;
-                        data["tanggal"] = year + "-" + month + "-" + date;
+                        var data = {};
                         if (posisi == "masuk") {
                             data["masuk"] = time;
                             data["latitude_masuk"] = body.latitude;
@@ -758,26 +952,45 @@ controllers.absensi = async function (req, res) {
                             data["latitude_keluar"] = body.latitude;
                             data["longitude_keluar"] = body.longitude;
                         }
-                        data["createdAt"] = new Date();
-                        // insert
-                        const insert = await Absensi.create(data);
-                        // process
-                        if (!insert) {
-                            res.status(404).json(
-                                "Proses absensi gagal dilakukan"
-                            );
-                        } else {
+                        data["updatedAt"] = new Date();
+                        await Absensi.update(data, {
+                            where: { id: id },
+                        }).then(async (value) => {
                             res.status(200).json({
-                                msg: "Proses absensi berhasil dilakukan",
+                                msg:
+                                    "Proses absensi " +
+                                    posisi +
+                                    " berhasil dilakukan",
                             });
-                        }
+                        });
                     }
-                });
-            } else {
-                res.status(404).json(
-                    "Absensi tidak dapat dilakukan diluar waktu"
-                );
-            }
+                } else {
+                    var data = {};
+                    data["memberId"] = memberId;
+                    data["ip"] = ip;
+                    data["tanggal"] = date_dash;
+                    if (posisi == "masuk") {
+                        data["masuk"] = time;
+                        data["latitude_masuk"] = body.latitude;
+                        data["longitude_masuk"] = body.longitude;
+                    } else {
+                        data["keluar"] = time;
+                        data["latitude_keluar"] = body.latitude;
+                        data["longitude_keluar"] = body.longitude;
+                    }
+                    data["createdAt"] = new Date();
+                    // insert
+                    const insert = await Absensi.create(data);
+                    // process
+                    if (!insert) {
+                        res.status(404).json("Proses absensi gagal dilakukan");
+                    } else {
+                        res.status(200).json({
+                            msg: "Proses absensi berhasil dilakukan",
+                        });
+                    }
+                }
+            });
         } else {
             var msg = "Absensi tidak dapat dilakukan";
             if (status == "weekend") {
@@ -789,9 +1002,16 @@ controllers.absensi = async function (req, res) {
             } else if (status == "luar_posisi") {
                 msg =
                     "Absensi tidak dapat dilakukan karena anda diluar jarak absensi";
+            } else if (status == "outtime") {
+                msg = "Absensi tidak dapat dilakukan diluar waktu";
             }
             res.status(404).json(msg);
         }
+        // } else {
+        //     res.status(404).json(
+        //         "Anda tidak dapat melakukan absensi dengan nomor IP yang sama."
+        //     );
+        // }
     }
 };
 
@@ -1033,7 +1253,7 @@ controllers.dataRiwayatAbsensi = async function (req, res) {
                                 var rest_end =
                                     e.tanggal +
                                     " " +
-                                    (dayName == "jum'at"
+                                    (dayName == "Jumat"
                                         ? "14:00:00"
                                         : "13:30:00");
 

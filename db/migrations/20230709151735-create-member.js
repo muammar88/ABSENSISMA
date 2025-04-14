@@ -32,6 +32,10 @@ module.exports = {
                 type: Sequelize.ENUM,
                 values: ["pns", "pppk", "bakti"],
             },
+            status_active: {
+                type: Sequelize.ENUM,
+                values: ["active", "nonactive"],
+            },
             jenis_kelamin: {
                 type: Sequelize.ENUM,
                 values: ["laki_laki", "perempuan"],

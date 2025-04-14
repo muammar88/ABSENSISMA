@@ -1,4 +1,3 @@
-const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { dirname } = require("path");
 const { Sequelize, Op, User } = require("../db/models");

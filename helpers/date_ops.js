@@ -1,4 +1,4 @@
-const { sequelize, Op, Tag, Post } = require("../db/models");
+const { sequelize, Op, Tag, Post, Setting } = require("../db/models");
 var moment = require("moment");
 const { promises } = require("fs");
 
@@ -205,6 +205,10 @@ helper.parsingDate = async (date) => {
 
 // calculate work time
 helper.calculateDays = async (startDate, endDate, restStart, restEnd) => {
+    const settings = await Setting.findOne({
+        where: { setting_name: "jam_kerja" },
+    });
+
     var durasiMasuk = 0;
     if (startDate != "") {
         // menghitung durasi masuk
@@ -225,9 +229,10 @@ helper.calculateDays = async (startDate, endDate, restStart, restEnd) => {
 
     // count
     var total = durasiMasuk + durasiKeluar; // menjumlah total durasi masuk dengan keluar
-    var r = total % 60;
+    var r = total % settings.setting_value;
+    // 45
     var s = total - r;
-    var t = s / 60;
+    var t = s / settings.setting_value;
     // return
     return t.toString() + "hr" + r.toString() + "minutes";
 };
@@ -296,15 +301,7 @@ helper.getDayName = async (date) => {
 
 helper.getDayName2 = async (dateStr, locale) => {
     var date = new Date(dateStr);
-    // console.log("xxxxxxxxxxxxxdate");
-    // console.log(date);
-    // console.log("xxxxxxxxxxxxxdate");
     var x = date.toLocaleDateString(locale, { weekday: "long" });
-
-    // console.log("xxxxxxxxxxxxxdate");
-    // console.log(x);
-    // console.log("xxxxxxxxxxxxxdate");
-
     return x;
 };
 
@@ -315,5 +312,64 @@ helper.getMonthDateRange = async (year, month) => {
     var endDate = moment(startDate).endOf("month").format("YYYY-MM-DD");
     return { start_date: startDate, end_date: endDate };
 };
+
+helper.enumerateDaysBetweenDates = async (
+    startDate,
+    endDate,
+    LiburMingguan,
+    Izin
+) => {
+    let date = [];
+    while (moment(startDate) <= moment(endDate)) {
+        if (LiburMingguan != undefined) {
+            var day = moment(startDate).format("dddd");
+            if (!LiburMingguan.includes(day)) {
+                date.push(startDate);
+            }
+        } else {
+            date.push(startDate);
+        }
+        startDate = moment(startDate).add(1, "days").format("YYYY-MM-DD");
+    }
+    return date;
+};
+
+// helper.enumerateDaysBetweenDates = function (startDate, endDate, skipDate) {
+//     var dates = [];
+
+//     var currDate = moment(startDate).startOf("day");
+//     var lastDate = moment(endDate).startOf("day");
+
+//     console.log("xxxxxx1");
+//     console.log(currDate);
+//     console.log(lastDate);
+//     console.log("xxxxxx1");
+
+//     var n = 1;
+
+//     while (currDate.add(1, "days").diff(lastDate) < 0) {
+//         // console.log(currDate.toDate());
+//         dates.push(currDate.clone().toDate());
+//         console.log(n);
+//         n++;
+//     }
+
+//     return dates;
+// };
+
+// helper.enumerateDaysBetweenDates = function (startDate, endDate) {
+//     var now = startDate.clone(),
+//         dates = [];
+
+//     while (now.isSameOrBefore(endDate)) {
+//         dates.push(now.format("M/D/YYYY"));
+//         now.add(1, "days");
+//     }
+
+//     console.log("xxxxxx1");
+//     console.log(dates);
+//     console.log("xxxxxx1");
+//     return dates;
+// };
 
 module.exports = helper;

@@ -59,6 +59,10 @@ const {
     getInfoPengaturanUmum,
     simpanPerubahanPengaturan,
     cetakPdf,
+    cetakPdfRekap,
+    daftarWaktuKerja,
+    info_edit_waktu_kerja,
+    update_waktu_kerja,
 } = require("../controllers/admin");
 const { get_token, LogOut } = require("../controllers/auth");
 
@@ -74,6 +78,7 @@ const {
     checkFakultasPengguna,
     checkKonfirmasiPassword,
     checkIDPengguna,
+    checkIDWaktuKerja,
 } = require("../helpers/callback");
 
 // ROUTER
@@ -181,6 +186,46 @@ router.post(
     getInfoPengaturanUmum
 );
 
+//
+
+router.post(
+    "/admin/:kode/daftar_waktu_kerja",
+    [verifyAdminSession, verifyAdminToken],
+    daftarWaktuKerja
+);
+
+router.post(
+    "/admin/:kode/info_edit_waktu_kerja",
+    [verifyAdminSession, verifyAdminToken],
+    body("id")
+        .notEmpty()
+        .withMessage("ID Waktu Kerja Tidak Boleh Kosong")
+        .custom(checkIDWaktuKerja),
+    info_edit_waktu_kerja
+);
+
+router.post(
+    "/admin/:kode/update_waktu_kerja",
+    [verifyAdminSession, verifyAdminToken],
+    body("id")
+        .notEmpty()
+        .withMessage("ID Waktu Kerja Tidak Boleh Kosong")
+        .custom(checkIDWaktuKerja),
+    body("mulai_absensi_masuk")
+        .notEmpty()
+        .withMessage("Mulai Absensi Masuk Tidak Boleh Kosong"),
+    body("akhir_absensi_masuk")
+        .notEmpty()
+        .withMessage("Akhir Absensi Masuk Tidak Boleh Kosong"),
+    body("mulai_absensi_keluar")
+        .notEmpty()
+        .withMessage("Mulai Absensi Keluar Tidak Boleh Kosong"),
+    body("akhir_absensi_keluar")
+        .notEmpty()
+        .withMessage("Akhir Absensi Keluar Tidak Boleh Kosong"),
+    update_waktu_kerja
+);
+
 router.post(
     "/admin/:kode/get_info_edit_pengguna",
     [verifyAdminSession, verifyAdminToken],
@@ -230,18 +275,18 @@ router.post("/admin/:kode/simpanPerubahanPengaturan", [
     body("nip_kepala_sekolah")
         .notEmpty()
         .withMessage("NIP kepala sekolah tidak boleh kosong"),
-    body("mulai_absensi_masuk")
-        .notEmpty()
-        .withMessage("Mulai absensi masuk tidak boleh kosong"),
-    body("akhir_absensi_masuk")
-        .notEmpty()
-        .withMessage("Akhir absensi masuk tidak boleh kosong"),
-    body("mulai_absensi_keluar")
-        .notEmpty()
-        .withMessage("Mulai absensi keluar tidak boleh kosong"),
-    body("akhir_absensi_keluar")
-        .notEmpty()
-        .withMessage("Akhir absensi keluar tidak boleh kosong"),
+    // body("mulai_absensi_masuk")
+    //     .notEmpty()
+    //     .withMessage("Mulai absensi masuk tidak boleh kosong"),
+    // body("akhir_absensi_masuk")
+    //     .notEmpty()
+    //     .withMessage("Akhir absensi masuk tidak boleh kosong"),
+    // body("mulai_absensi_keluar")
+    //     .notEmpty()
+    //     .withMessage("Mulai absensi keluar tidak boleh kosong"),
+    // body("akhir_absensi_keluar")
+    //     .notEmpty()
+    //     .withMessage("Akhir absensi keluar tidak boleh kosong"),
     body("letitude")
         .notEmpty()
         .withMessage("Letitude tidak boleh kosong")
@@ -257,9 +302,16 @@ router.post("/admin/:kode/simpanPerubahanPengaturan", [
         .withMessage("Jarak tidak boleh kosong")
         .isNumeric()
         .withMessage("Format Jarak tidak sesuai"),
+    body("jam_kerja")
+        .notEmpty()
+        .withMessage("Jam Kerja tidak boleh kosong")
+        .isNumeric()
+        .withMessage("Format Jam kerja tidak sesuai"),
     simpanPerubahanPengaturan,
 ]);
 
-router.get("/cetak-pdf/:kode/:bulan/:tahun", cetakPdf);
+router.get("/cetak-pdf/:kode/:startDate/:endDate", cetakPdf);
+
+router.get("/cetak-pdf-rekap-absensi/:kode/:startDate/:endDate", cetakPdfRekap);
 
 module.exports = router;

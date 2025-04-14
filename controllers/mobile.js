@@ -1,5 +1,4 @@
 const fs = require("fs");
-const bcrypt = require("bcrypt");
 // const session = require("express-session");
 var moment = require("moment");
 const jwt = require("jsonwebtoken");
@@ -282,7 +281,7 @@ controllers.dashboard = async function (req, res) {
             if (hours == 13 && minutes >= 30) {
                 intime = true;
                 posisi = "keluar";
-            } else if (hours == 16 && minutes == 00) {
+            } else if (hours == 16 && minutes == 0) {
                 intime = true;
                 posisi = "keluar";
             } else if (hours > 13 && hours < 16) {
@@ -464,7 +463,7 @@ controllers.absen_dosen = async function (req, res) {
             if (hours == 13 && minutes >= 30) {
                 intime = true;
                 posisi = "keluar";
-            } else if (hours == 16 && minutes == 00) {
+            } else if (hours == 16 && minutes == 0) {
                 intime = true;
                 posisi = "keluar";
             } else if (hours > 13 && hours < 16) {

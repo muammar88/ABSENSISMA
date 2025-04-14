@@ -12,6 +12,7 @@ const {
     DinasLuar,
     Holiday,
     Fakultas,
+    Waktu_kerja,
 } = require("../db/models");
 
 const inArray = (needle, haystack) => {
@@ -434,6 +435,15 @@ helper.checkIDPengguna = async (value) => {
     check = await User.findOne({ where: { id: value } });
     if (!check) {
         throw new Error("ID Pengguna tidak ditemukan.");
+    }
+    return true;
+};
+
+helper.checkIDWaktuKerja = async (value) => {
+    const query = await Waktu_kerja.findAndCountAll({ id: value });
+    const total_waktu_kerja = query.count;
+    if (total_waktu_kerja <= 0) {
+        throw new Error("ID Waktu Kerja tidak ditemukan.");
     }
     return true;
 };

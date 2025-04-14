@@ -89,7 +89,9 @@ function ListDaftarGuruTendik(JSONData) {
                     </td>
                     <td>
                         <center style="text-transform:uppercase;">
-                            ${json.status}
+                            ${json.status} <br>(${
+        json.status_active == "nonactive" ? "Pensiun" : "Active"
+    })
                         </center>
                     </td>
                     <td>
@@ -125,7 +127,7 @@ function deleteGuruTendik(id) {
             daftar_guru_tendik(20);
         },
         function (status, errMsg) {
-            frown_alert(errMsg);
+            frown_alert(errMsg.msg);
         }
     );
 }
@@ -205,7 +207,7 @@ function addGuruTendik() {
                 text: "Tambah Guru / Tendik Baru",
                 btnClass: "btn-blue",
                 action: function () {
-                    var par = ajax_default(
+                    ajax_default(
                         {
                             url: "admin/" + kode + "/add_new_guru_tendik",
                             method: "post",
@@ -213,19 +215,27 @@ function addGuruTendik() {
                             return: true,
                         },
                         function (e) {
-                            return { status: "success", msg: e.msg };
+                            smile_alert(e.msg);
+                            daftar_guru_tendik(20);
+                            // return { status: "success", msg: e.msg };
                         },
                         function (status, errMsg) {
-                            return { status: "error", msg: errMsg };
+                            frown_alert(errMsg.msg);
+                            // return { status: "error", msg: errMsg.msg };
                         }
                     );
-                    if (par.status == "error") {
-                        frown_alert(par.msg);
-                        return false;
-                    } else {
-                        smile_alert(par.msg);
-                        daftar_guru_tendik(20);
-                    }
+
+                    // console.log("+++++++++++par");
+                    // console.log(par);
+                    // console.log("+++++++++++par");
+
+                    // if (par.status == "error") {
+                    //     frown_alert(par.msg);
+                    //     return false;
+                    // } else {
+                    //     smile_alert(par.msg);
+                    //     daftar_guru_tendik(20);
+                    // }
                 },
             },
         },
@@ -240,6 +250,7 @@ function formAddGuruTendik(JSONValue) {
     var jenis_kelamin = "";
     var jabatan = "";
     var status = "";
+    var status_active = "";
 
     if (JSONValue != undefined) {
         var value = JSON.parse(JSONValue);
@@ -250,6 +261,7 @@ function formAddGuruTendik(JSONValue) {
         jenis_kelamin = value.jenis_kelamin;
         jabatan = value.jabatan;
         status = value.status;
+        status_active = value.status_active;
     }
     var form = `<form id="form" class="formName" enctype="multipart/form-data" method="post">
                     <div class="row px-0 py-3 mx-0">
@@ -293,13 +305,40 @@ function formAddGuruTendik(JSONValue) {
                                     <option value="guru" ${
                                         jabatan == "guru" ? "selected" : ""
                                     }>Guru</option>
-                                    <option value="guru" ${
-                                        jabatan == "tendik" ? "selected" : ""
-                                    }>Tekdik</option>
+                                    <option value="tata_usaha" ${
+                                        jabatan == "tata_usaha"
+                                            ? "selected"
+                                            : ""
+                                    }>Tata Usaha</option>
+
+                                    <option value="operator_sekolah" ${
+                                        jabatan == "operator_sekolah"
+                                            ? "selected"
+                                            : ""
+                                    }>Operator Sekolah</option>
+                                    <option value="pustakawan" ${
+                                        jabatan == "pustakawan"
+                                            ? "selected"
+                                            : ""
+                                    }>Pustakawan</option>
+                                    <option value="satpam" ${
+                                        jabatan == "satpam" ? "selected" : ""
+                                    }>Satpam</option>
+                                    <option value="penjaga_sekolah" ${
+                                        jabatan == "penjaga_sekolah"
+                                            ? "selected"
+                                            : ""
+                                    }>Penjaga Sekolah</option>
+
+                                    <option value="cleaning_service" ${
+                                        jabatan == "cleaning_service"
+                                            ? "selected"
+                                            : ""
+                                    }>Clearning Service</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-12">
+                        <div class="col-6">
                             <div class="form-group">
                                 <label>Status Pegawai</label>
                                 <select class="form-control form-control-sm rounded" name="status">
@@ -309,9 +348,29 @@ function formAddGuruTendik(JSONValue) {
                                     <option value="pppk" ${
                                         status == "pppk" ? "selected" : ""
                                     }>PPPK</option>
-                                    <option value="bakti" ${
-                                        status == "bakti" ? "selected" : ""
-                                    }>Bakti</option>
+                                    <option value="kontrak" ${
+                                        status == "kontrak" ? "selected" : ""
+                                    }>Kontrak</option>
+                                    <option value="honorer" ${
+                                        status == "honorer" ? "selected" : ""
+                                    }>Honorer</option>
+                                </select>
+                            </div>
+                        </div>
+                         <div class="col-6">
+                            <div class="form-group">
+                                <label>Status Aktif</label>
+                                <select class="form-control form-control-sm rounded" name="status_active">
+                                    <option value="active" ${
+                                        status_active == "active"
+                                            ? "selected"
+                                            : ""
+                                    }>Active</option>
+                                    <option value="nonactive" ${
+                                        status_active == "nonactive"
+                                            ? "selected"
+                                            : ""
+                                    }>Pensiun</option>
                                 </select>
                             </div>
                         </div>

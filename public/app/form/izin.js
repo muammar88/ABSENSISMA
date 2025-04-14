@@ -73,13 +73,19 @@ function ListIzin(JSONData) {
                     <td>${json.fullname}<br>${json.nip}</td>
                     <td><center>${json.start_date}</center></td>
                     <td><center>${json.end_date}</center></td>
-                    <td><center style="text-transform:uppercase;">${json.status}</center></td>
+                    <td><center style="text-transform:uppercase;">${
+                        json.status == "cutihamil" ? "CUTI HAMIL" : json.status
+                    } </center></td>
                     <td>
                         <center>
-                            <button type="button" class="btn btn-default btn-action" title="Edit Izin" style="margin:.15rem .1rem  !important" onclick="editIzin(${json.id})">
+                            <button type="button" class="btn btn-default btn-action" title="Edit Izin" style="margin:.15rem .1rem  !important" onclick="editIzin(${
+                                json.id
+                            })">
                                 <i class="fas fa-pencil-alt" style="font-size: 11px;"></i>
                             </button>
-                            <button type="button" class="btn btn-default btn-action" title="Hapus Izin" style="margin:.15rem .1rem  !important" onclick="deleteIzin(${json.id})">
+                            <button type="button" class="btn btn-default btn-action" title="Hapus Izin" style="margin:.15rem .1rem  !important" onclick="deleteIzin(${
+                                json.id
+                            })">
                                 <i class="fas fa-times" style="font-size: 11px;"></i>
                             </button>
                         </center>

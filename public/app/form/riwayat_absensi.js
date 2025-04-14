@@ -1,42 +1,53 @@
 function riwayat_absensi_index() {
+    var selectTanggal = `<option value='0'>Pilih Semua</option>`;
+    for (let i = 1; i <= 31; i++)
+        selectTanggal += `<option value='${i}'>${i}</option>`;
+
     $("#content-area").html(`<div class="row">
                                 <div class="col-lg-12 col-12">
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <div class="card  ">
-                                                <div class="card-header border-transparent" style="background-image: linear-gradient(141deg, #7d7d7d 0%, #415192fa 75%) !important;">
-                                                    <h3 class="card-title mt-0" style="font-size: .975rem;color: white;"><b>RIWAYAT ABSENSI</b></h3>
-                                                    <div class="card-tools">
-                                                        <div class="input-group input-group-sm " style="width: 1000px;">
-                                                            <button type="button" class="btn btn-success btn-sm" onclick="cetakRekapAbsensi()">
-                                                                <i class="fas fa-print"></i> Cetak Rekap Absensi
-                                                            </button>
-                                                            <button type="button" class="btn btn-primary  btn-sm  mx-2" onClick="addAbsensi()">
-                                                                <i class="fas fa-chalkboard-teacher"></i> Tambah Absensi
-                                                            </button>
-                                                            <select class="form-control rounded" id="bulan">
-                                                                <option value="0">Pilih Bulan</option>
-                                                                <option value="1">Januari</option>
-                                                                <option value="2">Februari</option>
-                                                                <option value="3">Maret</option>
-                                                                <option value="4">April</option>
-                                                                <option value="5">Mei</option>
-                                                                <option value="6">Juni</option>
-                                                                <option value="7">Juli</option>
-                                                                <option value="8">Agustus</option>
-                                                                <option value="9">September</option>
-                                                                <option value="10">Oktober</option>
-                                                                <option value="11">November</option>
-                                                                <option value="12">Desember</option>
-                                                            </select>
-                                                            <select class="form-control mx-2 rounded" id="tahun">
-                                                                <option value="0">Pilih Tahun</option>
-                                                            </select>
-                                                            <input type="text" id="search" class="form-control float-right"  style="width: 200px;" placeholder="Search by NAMA / NIP GURU & TENDIK">
-                                                            <div class="input-group-append" >
-                                                                <button type="button" class="btn btn-default" onClick="riwayat_absensi(20)">
-                                                                    <i class="fas fa-search"></i>
-                                                                </button>
+                                                <div class="card-header border-transparent row" style="background-image: linear-gradient(141deg, #7d7d7d 0%, #415192fa 75%) !important;">
+                                                    <div class="col-12 mb-2 col-md-2 mb-md-0" >
+                                                        <h3 class="card-title mt-0" style="font-size: .975rem;color: white;"><b>RIWAYAT ABSENSI</b></h3>
+                                                    </div>
+                                                    <div class="card-tools col-12 col-md-10 ">
+                                                        <div class="row" >
+                                                            <div class="col-12 col-md-9"> 
+                                                                <div class="row" >  
+                                                                    <div class="col-12 col-md-4 col-lg-2 mb-2 mb-md-2 mb-lg-0">
+                                                                        <button type="button" class="btn btn-sm btn-success w-100" onclick="cetakRekapAbsensi()">
+                                                                            <i class="fas fa-print"></i> <span class="d-none d-sm-none d-md-inline">Cetak Rekap </span>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="col-12 col-md-4 col-lg-2 mb-2 mb-md-2 mb-lg-0 " >
+                                                                        <button type="button" class="btn btn-sm btn-success w-100" onclick="cetakRekapRiwayatAbsensi()">
+                                                                            <i class="fas fa-print"></i> <span class="d-none d-sm-none d-md-inline">Cetak Riwayat</span>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="col-12 col-md-4 col-lg-2 mb-2 mb-md-2 mb-lg-0" >
+                                                                        <button type="button" class="btn btn-sm btn-primary w-100"  onClick="addAbsensi()">
+                                                                            <i class="fas fa-chalkboard-teacher"></i> <spa== class="d-none d-sm-none d-md-inline">Tambah Absensi</spa==\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="col-12 col-md-6 col-lg-3 mb-2 mb-md-2 mb-lg-0">
+                                                                        <input type="date" class="form-control form-control-sm rounded" id="start_date" placeholder="Mulai Tanggal" >
+                                                                    </div>
+                                                                    <div class="col-12 col-md-6 col-lg-3 mb-2 mb-md-2 mb-lg-0">
+                                                                        <input type="date" class="form-control form-control-sm rounded" id="end_date" placeholder="Akhir Tanggal" >
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-12 col-md-3 pt-1 mb-2 mb-md-0">   
+                                                                <div class="input-group input-group-sm" >
+                                                                    <input type="text" id="search" class="form-control form-control-sm float-right rounded-left"  placeholder="Search by NAMA / NIP GURU & TENDIK">
+                                                                    <div class="input-group-append" >
+                                                                        <button type="button" class="btn btn-sm btn-default" onClick="riwayat_absensi(20)">
+                                                                            <i class="fas fa-search"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -95,8 +106,8 @@ function riwayat_absensi(perpage) {
             ' <td colspan="7"><center>Daftar Riwayat Absensi Tidak Ditemukan</center></td>',
         param: {
             search: $("#search").val(),
-            bulan: $("#bulan").val(),
-            tahun: $("#tahun").val(),
+            start_date: $("#start_date").val(),
+            end_date: $("#end_date").val(),
         },
     });
 }
@@ -322,20 +333,24 @@ function formAddAbsensi(JSONData, JSONValue) {
     return form;
 }
 
+function cetakRekapRiwayatAbsensi() {
+    var start_date = $("#start_date").val();
+    if (start_date == "") start_date = "-";
+    var end_date = $("#end_date").val();
+    if (end_date == "") end_date = "-";
+    window.open(
+        "/cetak-pdf/" + kode + "/" + start_date + "/" + end_date,
+        "_blank"
+    );
+}
+
 function cetakRekapAbsensi() {
-    var bulan = $("#bulan").val();
-    var tahun = $("#tahun").val();
-    if (bulan != 0 || tahun != 0) {
-        // url: "admin/" + kode + "/info_list_absensi",
-        window.open("/cetak-pdf/" + kode + "/" + bulan + "/" + tahun, "_blank");
-        // ajax_default(
-        //     {
-        //         url: "admin/" + kode + "/" + bulan + "/" + tahun,
-        //         method: "get",
-        //     },
-        //     function (e) {}
-        // );
-    } else {
-        frown_alert("Bulan atau tahun tidak boleh kosong.");
-    }
+    var start_date = $("#start_date").val();
+    if (start_date == "") start_date = "-";
+    var end_date = $("#end_date").val();
+    if (end_date == "") end_date = "-";
+    window.open(
+        "/cetak-pdf-rekap-absensi/" + kode + "/" + start_date + "/" + end_date,
+        "_blank"
+    );
 }

@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
             password: DataTypes.STRING,
             jabatan: DataTypes.ENUM(["kepsek", "guru", "tendik"]),
             status: DataTypes.ENUM(["pns", "pppk", "bakti"]),
+            status_active: DataTypes.ENUM(["active", "nonactive"]),
             jenis_kelamin: DataTypes.ENUM(["laki_laki", "perempuan"]),
         },
         {

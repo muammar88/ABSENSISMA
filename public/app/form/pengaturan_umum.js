@@ -86,54 +86,6 @@ function pengaturan_umum_index() {
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td ><label class="my-2">MULAI ABSENSI MASUK</label></td>
-                                                                        <td > 
-                                                                            <div class="row">   
-                                                                                <div class="col-lg-2">
-                                                                                    <div class="form-group mb-0">
-                                                                                        <input type="time" class="form-control form-control-sm input_pengaturan" id="mulai_absensi_masuk" name="mulai_absensi_masuk" placeholder="Mulai Absensi Masuk" disabled>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td ><label class="my-2">AKHIR ABSENSI MASUK</label></td>
-                                                                        <td > 
-                                                                            <div class="row">   
-                                                                                <div class="col-lg-2">
-                                                                                    <div class="form-group mb-0">
-                                                                                        <input type="time" class="form-control form-control-sm input_pengaturan" id="akhir_absensi_masuk" name="akhir_absensi_masuk" placeholder="Akhir Absensi Masuk" disabled>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td ><label class="my-2">MULAI ABSENSI KELUAR</label></td>
-                                                                        <td > 
-                                                                            <div class="row">   
-                                                                                <div class="col-lg-2">
-                                                                                    <div class="form-group mb-0">
-                                                                                        <input type="time" class="form-control form-control-sm input_pengaturan" id="mulai_absensi_keluar" name="mulai_absensi_keluar" placeholder="Mulai Absensi Keluar" disabled>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td ><label class="my-2">AKHIR ABSENSI KELUAR</label></td>
-                                                                        <td > 
-                                                                            <div class="row">   
-                                                                                <div class="col-lg-2">
-                                                                                    <div class="form-group mb-0">
-                                                                                        <input type="time" class="form-control form-control-sm input_pengaturan" id="akhir_absensi_keluar" name="akhir_absensi_keluar" placeholder="Akhir Absensi Keluar" disabled>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
                                                                         <td ><label class="my-2">LETITUDE PUSAT ABSENSI</label></td>
                                                                         <td > 
                                                                             <div class="row">   
@@ -153,6 +105,21 @@ function pengaturan_umum_index() {
                                                                                     <div class="form-group mb-0">
                                                                                         <input type="number" min="5" max="25" step="5" class="form-control form-control-sm input_pengaturan" id="longitude" name="longitude" placeholder="Longitude Pusat Absensi" disabled>
                                                                                     </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td ><label class="my-2">JAM KERJA</label></td>
+                                                                        <td > 
+                                                                            <div class="row">   
+                                                                                <div class="col-lg-1">
+                                                                                    <div class="form-group mb-0">
+                                                                                        <input type="number" min="1" max="120" class="form-control form-control-sm input_pengaturan" id="jam_kerja" name="jam_kerja" placeholder="Jam Kerja" disabled>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-11 py-1 px-0">
+                                                                                    <span style="font-style:italic;">Dalam Menit</span>
                                                                                 </div>
                                                                             </div>
                                                                         </td>
@@ -223,6 +190,7 @@ function pengaturan_umum_start() {
             $("#letitude").val(e.data.letitude);
             $("#longitude").val(e.data.longitude);
             $("#jarak").val(e.data.jarak);
+            $("#jam_kerja").val(e.data.jam_kerja);
         },
         function (status, errMsg) {
             frown_alert(errMsg);

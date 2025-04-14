@@ -40,11 +40,7 @@ router.post(
     "/admin/:kode/add_new_guru_tendik",
     [verifyAdminSession, verifyAdminToken],
     body("nama").notEmpty().withMessage("Nama Guru Tidak Boleh Kosong"),
-    body("nip")
-        .notEmpty()
-        .withMessage("NIP Guru Tidak Boleh Kosong")
-        .trim()
-        .custom(checkNIPMember),
+    body("nip").trim().custom(checkNIPMember),
     body("jenis_kelamin")
         .notEmpty()
         .withMessage("Jenis Kelamin Tidak Boleh Kosong")
@@ -54,15 +50,31 @@ router.post(
     body("jabatan")
         .notEmpty()
         .withMessage("Jabatan Tidak Boleh Kosong")
-        .isIn(["kepsek", "guru", "tendik"])
+        .isIn([
+            "kepsek",
+            "guru",
+            "tata_usaha",
+            "operator_sekolah",
+            "pustakawan",
+            "satpam",
+            "penjaga_sekolah",
+            "cleaning_service",
+			"pengawas_pembina",
+        ])
         .withMessage("Jabatan tidak valid")
         .trim(),
     body("status")
         .notEmpty()
         .withMessage("Status Tidak Boleh Kosong")
-        .isIn(["pns", "pppk", "bakti"])
+        .isIn(["pns", "pppk", "kontrak", "honorer"])
         .withMessage("Status pegawai tidak valid")
         .trim(),
+    body("status_active")
+        .notEmpty()
+        .withMessage("Status Aktif Tidak Boleh Kosong")
+        .isIn(["nonactive", "active"])
+        .withMessage("Status Aktif tidak valid")
+        .trim(),    
     body("username")
         .notEmpty()
         .withMessage("Username Tidak Boleh Kosong")
@@ -100,14 +112,30 @@ router.post(
     body("jabatan")
         .notEmpty()
         .withMessage("Jabatan Tidak Boleh Kosong")
-        .isIn(["kepsek", "guru", "tendik"])
+        .isIn([
+            "kepsek",
+            "guru",
+            "tata_usaha",
+            "operator_sekolah",
+            "pustakawan",
+            "satpam",
+            "penjaga_sekolah",
+            "cleaning_service",
+			"pengawas_pembina",
+        ])
         .withMessage("Jabatan tidak valid")
         .trim(),
     body("status")
         .notEmpty()
         .withMessage("Status Tidak Boleh Kosong")
-        .isIn(["pns", "pppk", "bakti"])
+        .isIn(["pns", "pppk", "kontrak", "honorer"])
         .withMessage("Status pegawai tidak valid")
+        .trim(),
+    body("status_active")
+        .notEmpty()
+        .withMessage("Status Aktif Tidak Boleh Kosong")
+        .isIn(["nonactive", "active"])
+        .withMessage("Status Aktif tidak valid")
         .trim(),
     body("username")
         .notEmpty()

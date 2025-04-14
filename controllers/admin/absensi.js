@@ -1,5 +1,4 @@
 const fs = require("fs");
-const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { QueryTypes } = require("sequelize");
 const { dirname } = require("path");
@@ -56,27 +55,12 @@ controllers.riwayatAbsensi = async (req, res) => {
         const body = req.body;
         var search = "";
 
-        var date = new Date();
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var filter = false;
+        const today = moment(new Date()).format("YYYY-MM-DD");
 
         var limit = body.perpage;
         var page = 1;
         if (body.pageNumber != undefined) page = body.pageNumber;
         if (body.search != undefined && body.search != "") search = body.search;
-        if (body.bulan != undefined && body.bulan != 0) {
-            var month = body.bulan;
-            if (body.tahun != undefined && body.tahun != 0) {
-                year = body.tahun;
-            }
-            filter = true;
-        } else {
-            if (body.tahun != undefined && body.tahun != 0) {
-                year = body.tahun;
-                filter = true;
-            }
-        }
 
         var sql = {};
         sql["limit"] = limit * 1;
@@ -101,12 +85,28 @@ controllers.riwayatAbsensi = async (req, res) => {
             },
         ];
 
-        if (filter == true) {
-            var start_end_date = await getMonthDateRange(year, month);
+        if (body.start_date == "" && body.end_date != "") {
+            let endDate = moment(body.end_date).format("YYYY-MM-DD");
             sql["where"] = {
                 tanggal: {
-                    [Op.gte]: start_end_date.start_date,
-                    [Op.lt]: start_end_date.end_date,
+                    [Op.lte]: endDate,
+                },
+            };
+        } else if (body.start_date != "" && body.end_date == "") {
+            let startDate = moment(body.start_date).format("YYYY-MM-DD");
+            sql["where"] = {
+                tanggal: {
+                    [Op.gte]: startDate,
+                    [Op.lte]: today,
+                },
+            };
+        } else if (body.start_date != "" && body.end_date != "") {
+            let endDate = moment(body.end_date).format("YYYY-MM-DD");
+            let startDate = moment(body.start_date).format("YYYY-MM-DD");
+            sql["where"] = {
+                tanggal: {
+                    [Op.gte]: startDate,
+                    [Op.lte]: endDate,
                 },
             };
         }

@@ -1,4 +1,3 @@
-const bcrypt = require("bcrypt");
 // const session = require("express-session");
 var moment = require("moment");
 const jwt = require("jsonwebtoken");

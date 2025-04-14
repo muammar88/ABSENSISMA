@@ -33,6 +33,12 @@ helper.generateSlug = async (value) => {
     return returnText;
 };
 
+helper.capitalize = async (text) => {
+    return text.replace(/\b\w/g, function (m) {
+        return m.toUpperCase();
+    });
+};
+
 helper.checkTagId = async (value) => {
     check = await Tag.findOne({ where: { id: value } });
     if (!check) {

@@ -1,5 +1,6 @@
 const fs = require("fs");
-const bcrypt = require("bcrypt");
+// const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { QueryTypes } = require("sequelize");
 const { dirname } = require("path");
@@ -39,6 +40,44 @@ const { validationResult } = require("express-validator");
 
 const controllers = {};
 
+const convertJabatan = async (param) => {
+    // console.log("++++++++++param");
+    // console.log(param);
+    // console.log("++++++++++param");
+    var feedback = "";
+    switch (param) {
+        case "kepsek":
+            feedback = "KEPALA SEKOLAH";
+            break;
+        case "guru":
+            feedback = "GURU";
+            break;
+        case "tata_usaha":
+            feedback = "TATA USAHA";
+            break;
+        case "operator_sekolah":
+            feedback = "OPERATOR SEKOLAH";
+            break;
+        case "pustakawan":
+            feedback = "PUSTAKAWAN";
+            break;
+        case "satpam":
+            feedback = "SATPAM";
+            break;
+        case "satpam":
+            feedback = "SATPAM";
+            break;
+        case "penjaga_sekolah":
+            feedback = "PENJAGA SEKOLAH";
+            break;
+        case "cleaning_service":
+            feedback = "CLEANING SERVICE";
+            break;
+        default:
+            feedback = "TIDAK DITEMUKAN";
+    }
+    return feedback;
+};
 // daftar dosen
 controllers.daftarGuruTendik = async (req, res) => {
     const errors = validationResult(req);
@@ -66,6 +105,7 @@ controllers.daftarGuruTendik = async (req, res) => {
         sql["order"] = [["id", "DESC"]];
         sql["attributes"] = [
             "id",
+            "status_active",
             "nama",
             "nip",
             "username",
@@ -93,13 +133,25 @@ controllers.daftarGuruTendik = async (req, res) => {
                 var i = 0;
                 await Promise.all(
                     value.map(async (e) => {
+
+                        console.log("====================");
+                        console.log(e);
+                        console.log(e.id);
+                        console.log(e.status_active);
+                        // e.status_active
+                        console.log("====================");
+
+                        var jab = await convertJabatan(e.jabatan);
+
+                       
                         list[i] = {
                             id: e.id,
                             fullname: e.nama,
                             nip: e.nip,
                             username: e.username,
                             status: e.status,
-                            jabatan: e.jabatan,
+                            status_active : e.status_active,
+                            jabatan: jab,
                             jenis_kelamin: e.jenis_kelamin,
                         };
 
@@ -155,6 +207,7 @@ controllers.addNewGuruTendik = async (req, res) => {
                 data["password"] = hash;
                 data["jabatan"] = body.jabatan;
                 data["status"] = body.status;
+                data['status_active'] = body.status_active;
                 data["jenis_kelamin"] = body.jenis_kelamin;
                 data["createdAt"] = myDate;
                 data["updatedAt"] = myDate;
@@ -163,11 +216,11 @@ controllers.addNewGuruTendik = async (req, res) => {
                 // process
                 if (!insert) {
                     res.status(400).json({
-                        msg: "Absensi dosen gagal ditambahkan.",
+                        msg: "Absensi Guru & Tendik gagal ditambahkan.",
                     });
                 } else {
                     res.status(200).json({
-                        msg: "Absensi dosen berhasil ditambahkan.",
+                        msg: "Absensi Guru & Tendik berhasil ditambahkan.",
                     });
                 }
             })
@@ -208,6 +261,7 @@ controllers.updateGuruTendik = async (req, res) => {
         }
         data["jabatan"] = body.jabatan;
         data["status"] = body.status;
+        data['status_active'] = body.status_active;
         data["jenis_kelamin"] = body.jenis_kelamin;
         data["updatedAt"] = myDate;
         // update process
@@ -286,6 +340,7 @@ controllers.getInfoEditMember = async (req, res) => {
                 username: e.username,
                 jabatan: e.jabatan,
                 status: e.status,
+                status_active : e.status_active, 
                 jenis_kelamin: e.jenis_kelamin,
             };
             i++;

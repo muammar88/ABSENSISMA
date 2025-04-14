@@ -44,8 +44,10 @@ app.use(
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 // app.use("/static", express.static("public"));
-app.use("/static", express.static(__dirname + "/public"));
 // app.use("/public", express.static(path.join(__dirname, "public")));
+// app.use("/static", express.static(__dirname + "/public"));
+app.use("/static", express.static(__dirname + "/public"));
+
 app.use("/photo", express.static("photo"));
 
 (async () => {
@@ -67,6 +69,6 @@ app.use(izinRouter);
 app.use(hariLiburRouter);
 app.use(guruRouter);
 
-app.listen(3007, function () {
+app.listen(3001, "0.0.0.0", function () {
     console.log("Server Running");
 });

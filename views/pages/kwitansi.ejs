@@ -22,18 +22,38 @@
           <div class="col-12 py-3 px-5 justify-content-center container-fluid" >
              <div class="row">
                 <div class="col-12 mb-4 text-center">
-                    <h3>DAFTAR HADIR GURU & TENDIK </h3>
-                    <h5>SMA 9 ABDYA</h5>
+                    <div class="row">
+                        <div class="col-2">
+                            <img src="/static/img/logo-pemerintah-aceh.png" alt="Outlet Pulsa"  style="opacity: .8;background-color: white;">
+                        </div>
+                        <div class="col-8">
+                            <h3 class="mb-0">PEMERINTAH ACEH</h3>
+                            <h5 class="mb-0">DINAS PENDIDIKAN ACEH</h5>
+                            <h5 class="mb-0">SMA NEGERI 9 ACEH BARAT DAYA</h5>
+                            <h6 class="mb-0" style="font-size: 14px;">Jalan.H.Hanafiah Sanany. Desa Kaye Aceh Kecamatan Lembah Sabil Kab. Abdya 23762</h6>
+                            <h6 class="mb-0" style="font-size: 14px;">Webside: http://sman9abdya.sch.id. Email. Sman9acehbaratdaya05@Gmail.com</h6>
+                        </div>
+                        <div class="col-2">
+                            <img src="/static/img/logo-sman9-kop.png" alt="Outlet Pulsa"  style="opacity: .8;background-color: white;">
+                        </div>
+                        <hr class="w-100 mt-3 mb-4" style="border-top: 3px solid rgb(0 0 0);">
+                        <div class="col-12">
+                            <h6 class="mb-1">DAFTAR HADIR GURU DAN TENDIK SMA NEGERI 9 ACEH BARAT DAYA</h6> 
+                            <!-- <h6 class="mb-5">BULAN : ..........   /   TAHUN : .......... </h6> 
+                            <h6 class="mb-3">TABEL DAFTAR HADIR</h6> -->
+                        </div>
+                    </div>
                 </div>
                 <div class="col-12 ">
                     <table class="table">
                         <thead>
                             <tr>
-                                <td class="border" style="width: 3%;"><center>#</center></td>
-                                <td class="border" style="width: 25%;"><center>NAMA/NIP</center></td>
-                                <td class="border" style="width: 20%;"><center>WAKTU MASUK</center></td>
-                                <td class="border" style="width: 20%;"><center>WAKTU KELUAR</center></td>
+                                <td class="border" style="width: 3%;"><center>NO</center></td>
+                                <td class="border" style="width: 20%;"><center>NAMA/NIP</center></td>
                                 <td class="border" style="width: 15%;"><center>STATUS</center></td>
+                                <td class="border" style="width: 15%;"><center>WAKTU MASUK</center></td>
+                                <td class="border" style="width: 15%;"><center>WAKTU KELUAR</center></td>
+                                <td class="border" style="width: 15%;"><center>KET</center></td>
                                 <td class="border" style="width: 17%;"><center>TANGGAL</center></td>
                             </tr>
                         </thead>
@@ -47,9 +67,10 @@
                                             <br>NIP: <%= list[index].nip %>
                                             <br>Jabatan: <span style="text-transform: uppercase;font-weight: bold;"><%= list[index].jabatan %> </span>
                                         </td>
+                                        <td style="text-transform: uppercase;"><center><%= list[index].status == '' ? '-' : list[index].status  %></center></td>
                                         <td><center><%= list[index].waktu_masuk != null ?  list[index].waktu_masuk : '-'%></center></td>
                                         <td><center><%= list[index].waktu_keluar != null ? list[index].waktu_keluar : '-' %></center></td>
-                                        <td><center><%= list[index].status %></center></td>
+                                        <td><center><%= list[index].ket == 'cutihamil' ? 'cuti hamil' : list[index].ket %></center></td>
                                         <td><center><%= list[index].tanggal %></center></td>
                                     </tr>
                                 <% } %>
@@ -60,6 +81,56 @@
                             <% } %>
                         </tbody>
                     </table>
+                </div>
+                <div class="col-4 mt-5">
+                    <div class="row">
+                        <div class="col-12">
+                            <h6 class="mb-3">REKAP KEHADIRAN</h6> 
+                        </div>
+                        <div class="col-12">
+                            <table class="table">
+                                <tr>
+                                    <td class="py-1 px-0" style="width: 40%;border: none;">HADIR</td>
+                                    <td class="py-1 px-0" style="width: 5%;border: none;"> : </td>
+                                    <td class="py-1 px-0" style="border: none;"><%= rekap.hadir %> Orang</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-1 px-0" style="border: none;">DINAS LUAR</td>
+                                    <td class="py-1 px-0" style="border: none;"> : </td>
+                                    <td class="py-1 px-0" style="border: none;"><%= rekap.dinasluar %> Orang</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-1 px-0" style="border: none;">IZIN</td>
+                                    <td class="py-1 px-0" style="border: none;"> : </td>
+                                    <td class="py-1 px-0" style="border: none;"><%= rekap.izin %> Orang</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-1 px-0" style="border: none;">CUTI HAMIL</td>
+                                    <td class="py-1 px-0" style="border: none;"> : </td>
+                                    <td class="py-1 px-0" style="border: none;"><%= rekap.cutihamil %> Orang</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-1 px-0" style="border: none;">SAKIT</td>
+                                    <td class="py-1 px-0" style="border: none;"> : </td>
+                                    <td class="py-1 px-0" style="border: none;"><%= rekap.sakit %> Orang</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-1 px-0" style="border: none;">TANPA KETERANGAN</td>
+                                    <td class="py-1 px-0" style="border: none;"> : </td>
+                                    <td class="py-1 px-0" style="border: none;"><%= (typeof rekap['Tanpa Keterangan'] !== 'undefined' ? rekap['Tanpa Keterangan'] : 0) +
+                                        (typeof rekap['tidak hadir'] !== 'undefined' ? rekap['tidak hadir'] : 0) %> Orang</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                </div>
+                <div class="col-4 mt-5">
+                    <h6 class="mb-1">Kaye Aceh, <%= tanggal %></h6> 
+                    <h6 class="mb-5 pb-5">Kepala Sekolah,</h6> 
+                    <h6 class="mt-5">MARZUKI, S.Pd, M.Pd</h6>
+                    <h6 class="mt-0">NIP.  19800414 200504 1 001</h6>
                 </div>
              </div>
           </div>

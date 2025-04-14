@@ -220,8 +220,8 @@ function formTambahEditHariLibur(JSONValue) {
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label>Tanggal Akhir</label>
-                                <input type="date" class="form-control form-control-sm" name="tanggal" placeholder="Tanggal Akhir" value="${tanggal}">
+                                <label>Tanggal</label>
+                                <input type="date" class="form-control form-control-sm" name="tanggal" placeholder="Tanggal" value="${tanggal}">
                             </div>
                         </div>
                         <div class="col-12">

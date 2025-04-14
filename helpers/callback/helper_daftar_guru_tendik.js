@@ -5,18 +5,20 @@ const { Op, Member } = require("../../db/models");
 const helper = {};
 
 helper.checkNIPMember = async (value, { req }) => {
-    var body = req.body;
-    if (body.id != undefined) {
-        check = await Member.findOne({
-            where: { nip: value, id: { $not: body.id } },
-        });
-    } else {
-        check = await Member.findOne({
-            where: { nip: value },
-        });
-    }
-    if (check) {
-        throw new Error("NIP Guru Sudah Terdaftar Dipangkalan Data.");
+    if (value != "") {
+        var body = req.body;
+        if (body.id != undefined) {
+            check = await Member.findOne({
+                where: { nip: value, id: { $not: body.id } },
+            });
+        } else {
+            check = await Member.findOne({
+                where: { nip: value },
+            });
+        }
+        if (check) {
+            throw new Error("NIP Guru Sudah Terdaftar Dipangkalan Data.");
+        }
     }
     return true;
 };

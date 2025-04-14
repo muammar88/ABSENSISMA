@@ -98,7 +98,11 @@
             clockUpdate();
             setInterval(clockUpdate, 1000);
             setInterval(function() { 
-
+                
+                console.log("-------------letitude");
+                console.log(letitude);
+                console.log(longitude);
+                console.log("-------------longitude");
 
                 positioning(letitude, longitude);
                 // console.log(letitude); 
@@ -146,6 +150,11 @@
                 var latitude2 = position.coords.latitude;
                 var longitude2 = position.coords.longitude;
                 var jarak = getDistanceBetweenPoints(letitude,longitude,latitude2,longitude2,'kilometers') * 1000;
+
+                console.log("++++++++++++++++Jarak");
+                console.log(jarak);
+                console.log(jarak_min);
+                console.log("++++++++++++++++Jarak Min");
 
                 // var jarak = distance(letitude,longitude,latitude2,longitude2, "K") * 1000 ;
                 if( jarak > jarak_min ){
@@ -205,6 +214,13 @@
                 longitude2,
                 unit = "miles"
             ) {
+console.log("xxxxxxxxxxxx");
+console.log(latitude1);
+console.log(longitude1);
+console.log(latitude2);
+console.log(longitude2);
+console.log("xxxxxxxxxxxx");
+
                 let theta = longitude1 - longitude2;
                 let distance =
                     60 *
