@@ -69,6 +69,6 @@ app.use(izinRouter);
 app.use(hariLiburRouter);
 app.use(guruRouter);
 
-app.listen(3001, "0.0.0.0", function () {
+app.listen(process.env.PORT, "0.0.0.0", function () {
     console.log("Server Running");
 });
