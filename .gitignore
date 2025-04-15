@@ -10,6 +10,8 @@ dist/
 #config
 config/
 
+public/img/**
+
 photo/sk/
 
 # Compiled Java class files
