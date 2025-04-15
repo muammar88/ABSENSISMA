@@ -716,8 +716,21 @@ controllers.cetakPdf = async function (req, res, next) {
         "Tanpa Keterangan": 0,
     };
 
+    console.log('_____________________');
+    console.log(rekap);
+    console.log('_____________________');
+
     for (q in list) {
-        rekap[list[q].ket] = rekap[list[q].ket] + 1;
+        console.log('_____________________A');
+        console.log(list[q].ket);
+        console.log('_____________________B');
+        console.log(rekap[list[q].ket]);
+        console.log('_____________________C');
+        if( rekap[list[q].ket] !== undefined ) {
+            rekap[list[q].ket] = rekap[list[q].ket] + 1;
+        }else{
+            rekap['Tanpa Keterangan'] = rekap['Tanpa Keterangan'] + 1;
+        }
     }
 
     res.render("pages/kwitansi", {
