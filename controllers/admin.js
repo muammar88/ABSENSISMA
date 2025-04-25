@@ -466,9 +466,24 @@ controllers.cetakPdfRekap = async function (req, res, next) {
         }
     }
 
-    // console.log("+++++++++++++list");
-    // console.log(list);
-    // console.log("+++++++++++++list");
+    var kepala_sekolah = '';
+    var alamat = '';
+    var nip = '';
+    await Setting.findAll().then(async (value) => {
+        await Promise.all(
+            value.map(async (e) => {
+                if(e.setting_name == 'nama_kepala_sekolah') {
+                    kepala_sekolah = e.setting_value;
+                }
+                if(e.setting_name == 'nip_kepala_sekolah') {
+                    nip = e.setting_value;
+                }
+                if(e.setting_name == 'alamat') {
+                    alamat = e.setting_value;
+                }
+            })
+        );
+    });
 
     var s = moment(startDate).format("LL");
     var e = moment(endDate).format("LL");
@@ -479,6 +494,9 @@ controllers.cetakPdfRekap = async function (req, res, next) {
         end_date: e,
         jumlah_kerja: daftar_hari_kerja.length,
         tanggal: moment(new Date()).format("LL"),
+        kepala_sekolah : kepala_sekolah, 
+        alamat : alamat,
+        nip : nip
     });
 };
 
@@ -733,10 +751,32 @@ controllers.cetakPdf = async function (req, res, next) {
         }
     }
 
+    var kepala_sekolah = '';
+    var alamat = '';
+    var nip = '';
+    await Setting.findAll().then(async (value) => {
+        await Promise.all(
+            value.map(async (e) => {
+                if(e.setting_name == 'nama_kepala_sekolah') {
+                    kepala_sekolah = e.setting_value;
+                }
+                if(e.setting_name == 'nip_kepala_sekolah') {
+                    nip = e.setting_value;
+                }
+                if(e.setting_name == 'alamat') {
+                    alamat = e.setting_value;
+                }
+            })
+        );
+    });
+
     res.render("pages/kwitansi", {
         list,
         rekap,
         tanggal: moment(new Date()).format("LL"),
+        kepala_sekolah : kepala_sekolah, 
+        alamat : alamat,
+        nip : nip
     });
 };
 

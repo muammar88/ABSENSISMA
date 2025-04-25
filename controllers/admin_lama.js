@@ -181,10 +181,6 @@ controllers.cetakPdfRekap = async function (req, res, next) {
         Mingguan
     );
 
-    // console.log("++++++++++daftar_hari_kerja");
-    // console.log(daftar_hari_kerja);
-    // console.log("++++++++++daftar_hari_kerja");
-
     var h = 0;
     var list = {};
     for (xi in listMember) {
@@ -232,15 +228,6 @@ controllers.cetakPdfRekap = async function (req, res, next) {
                             ) {
                                 st = "ada";
 
-
-                                console.log("-------------awal");
-                                console.log(o);
-                                console.log(listMember[xi].id);
-                                console.log(list);
-                                console.log(list[listMember[xi].id]);
-                                // console.log(list[listMember[xi].id][o]);
-                                console.log(listMember[xi].id);
-                                console.log("-------------akhir");
                                 if (list[listMember[xi].id][o] !== undefined) {
                                     list[listMember[xi].id][o] =
                                         list[listMember[xi].id][o] + 1;
@@ -396,6 +383,8 @@ controllers.cetakPdfRekap = async function (req, res, next) {
         }
     }
 
+    
+
     var s = moment(startDate).format("LL");
     var e = moment(endDate).format("LL");
 
@@ -405,6 +394,9 @@ controllers.cetakPdfRekap = async function (req, res, next) {
         end_date: e,
         jumlah_kerja: daftar_hari_kerja.length,
         tanggal: moment(new Date()).format("LL"),
+        kepala_sekolah : '', 
+        alamat : '',
+        nip : ''
     });
 };
 
