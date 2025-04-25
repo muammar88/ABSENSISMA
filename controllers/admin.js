@@ -466,9 +466,13 @@ controllers.cetakPdfRekap = async function (req, res, next) {
         }
     }
 
+    var nama_sekolah = '';
     var kepala_sekolah = '';
     var alamat = '';
     var nip = '';
+    var alamat_sekolah = '';
+    var alamat_website = '';
+    var email = '';
     await Setting.findAll().then(async (value) => {
         await Promise.all(
             value.map(async (e) => {
@@ -480,6 +484,18 @@ controllers.cetakPdfRekap = async function (req, res, next) {
                 }
                 if(e.setting_name == 'alamat') {
                     alamat = e.setting_value;
+                }
+                if(e.setting_name == 'alamat_sekolah') {
+                    alamat_sekolah = e.setting_value;
+                }
+                if(e.setting_name == 'alamat_website') {
+                    alamat_website = e.setting_value;
+                }
+                if(e.setting_name == 'email') {
+                    email = e.setting_value;
+                }
+                if(e.setting_name == 'nama_sekolah') {
+                    nama_sekolah = e.setting_value;
                 }
             })
         );
@@ -496,7 +512,11 @@ controllers.cetakPdfRekap = async function (req, res, next) {
         tanggal: moment(new Date()).format("LL"),
         kepala_sekolah : kepala_sekolah, 
         alamat : alamat,
-        nip : nip
+        nip : nip,
+        alamat_sekolah: alamat_sekolah, 
+        alamat_website: alamat_website, 
+        email: email, 
+        nama_sekolah: nama_sekolah
     });
 };
 
@@ -751,9 +771,13 @@ controllers.cetakPdf = async function (req, res, next) {
         }
     }
 
+    var nama_sekolah = '';
     var kepala_sekolah = '';
     var alamat = '';
     var nip = '';
+    var alamat_sekolah = '';
+    var alamat_website = '';
+    var email = '';
     await Setting.findAll().then(async (value) => {
         await Promise.all(
             value.map(async (e) => {
@@ -766,6 +790,18 @@ controllers.cetakPdf = async function (req, res, next) {
                 if(e.setting_name == 'alamat') {
                     alamat = e.setting_value;
                 }
+                if(e.setting_name == 'alamat_sekolah') {
+                    alamat_sekolah = e.setting_value;
+                }
+                if(e.setting_name == 'alamat_website') {
+                    alamat_website = e.setting_value;
+                }
+                if(e.setting_name == 'email') {
+                    email = e.setting_value;
+                }
+                if(e.setting_name == 'nama_sekolah') {
+                    nama_sekolah = e.setting_value;
+                }
             })
         );
     });
@@ -776,7 +812,11 @@ controllers.cetakPdf = async function (req, res, next) {
         tanggal: moment(new Date()).format("LL"),
         kepala_sekolah : kepala_sekolah, 
         alamat : alamat,
-        nip : nip
+        nip : nip, 
+        alamat_sekolah: alamat_sekolah,
+        alamat_website: alamat_website, 
+        email: email, 
+        nama_sekolah: nama_sekolah
     });
 };
 
