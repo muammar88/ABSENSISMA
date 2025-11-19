@@ -73,6 +73,12 @@ const convertJabatan = async (param) => {
         case "cleaning_service":
             feedback = "CLEANING SERVICE";
             break;
+        case "pengawas_pembina":
+            feedback = "PENGAWAS PEMBINA";
+            break;
+        case "pengelola_umum_operasional":
+            feedback = "PENGELOLA UMUM OPERASIONAL";
+            break;    
         default:
             feedback = "TIDAK DITEMUKAN";
     }
