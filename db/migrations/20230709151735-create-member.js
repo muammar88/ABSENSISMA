@@ -26,11 +26,11 @@ module.exports = {
             },
             jabatan: {
                 type: Sequelize.ENUM,
-                values: ["kepsek", "guru", "tendik"],
+                values: ['kepsek','guru','tata_usaha','operator_sekolah','pustakawan','satpam','penjaga_sekolah','cleaning_service','pengawas_pembina','pengelola_umum_operasional'],
             },
             status: {
                 type: Sequelize.ENUM,
-                values: ["pns", "pppk", "bakti"],
+                values: ['pns','pppk','bakti','kontrak','honorer'],
             },
             status_active: {
                 type: Sequelize.ENUM,
