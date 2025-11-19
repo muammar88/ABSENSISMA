@@ -60,6 +60,7 @@ router.post(
             "penjaga_sekolah",
             "cleaning_service",
 			"pengawas_pembina",
+            "pengelola_umum_operasional"
         ])
         .withMessage("Jabatan tidak valid")
         .trim(),
