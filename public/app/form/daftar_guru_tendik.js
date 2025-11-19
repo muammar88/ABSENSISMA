@@ -335,6 +335,18 @@ function formAddGuruTendik(JSONValue) {
                                             ? "selected"
                                             : ""
                                     }>Clearning Service</option>
+
+                                    <option value="pengawas_pembina" ${
+                                        jabatan == "pengawas_pembina"
+                                            ? "selected"
+                                            : ""
+                                    }>Pengawas Pembina</option>
+
+                                     <option value="pengelola_umum_operasional" ${
+                                        jabatan == "pengelola_umum_operasional"
+                                            ? "selected"
+                                            : ""
+                                    }>Pengelola Umum Operasional</option>
                                 </select>
                             </div>
                         </div>
